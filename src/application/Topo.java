@@ -1,5 +1,7 @@
 package application;
 
+import java.util.Random;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
@@ -67,7 +69,11 @@ public class Topo extends Parent implements EventHandler<MouseEvent>{
 	    
 
 	};
-
+	public static void random() {
+		Random topoA = new Random();
+		topoA.nextInt(0,16);
+		
+	}
 	private void createTopo() {
 		//TOPOS-----------------------------------------------------------------------------------------------------------------------------------------
 		
@@ -83,7 +89,7 @@ public class Topo extends Parent implements EventHandler<MouseEvent>{
 		for(int i=0; i< topo.length;i++) {
 			
 			topo[i] = new Rectangle(100,100); // topo[i] = new ImageView();
-			topo[i].setFill(Color.BLACK);		
+			topo[i].setFill(Color.BLACK);	
 			topo[i].setOnMouseClicked(click);
 			
 			if(i %4 == 0) {

@@ -1,16 +1,17 @@
 package application;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
+import javafx.util.Duration;
 
 public class Tempo extends Parent{
     
-    private Label time = new Label("Tiempo: ");
-    private int timeRemaining = 60;
-    private Timer timer;
+    Label time = new Label("Tiempo: ");
     
     public Tempo() {
     	crear();
@@ -18,18 +19,20 @@ public class Tempo extends Parent{
     }
     
     private void crear() {
-        timer = new Timer();
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                if (timeRemaining > 0) {
-                    timeRemaining--;
-                    time.setText("Tiempo: " + timeRemaining);
-                } else {
-                    timer.cancel();
-                }
-            }
-        };
-        timer.scheduleAtFixedRate(task, 0, 1000);
+    	//final = no modificable
+    	final IntegerProperty countdown = new SimpleIntegerProperty(60); // Inicializa el contador en 60 segundos || IntergerProperty, para mostrar en UI
+    	// Crea una línea de tiempo que actualiza el contador cada segundo
+        Timeline timeline = new Timeline();
+        timeline.setCycleCount(Animation.INDEFINITE); // Repite indefinidamente
+        timeline.getKeyFrames().add(
+                new KeyFrame(Duration.seconds(1), event -> {
+                    countdown.set(countdown.get() - 1); // Contador --
+                    time.setText("Tiempo restante: "+Integer.toString(countdown.get())); // Actualiza el texto del label con el contador
+                    if (countdown.get() == 0) {
+                        timeline.stop(); // Detiene la línea de tiempo = "temporizador"  cuando el contador llega a 0
+                    }
+                }));
+        timeline.play(); // Inicia la línea de tiempo
+ 
     }
 }

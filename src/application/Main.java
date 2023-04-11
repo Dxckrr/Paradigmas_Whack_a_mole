@@ -26,11 +26,11 @@ public class Main extends Application {
 	Scene inicio, juego; // Escenas de juego y menu
 	
 	
-	//Crear objeto "game" , la cual, crea los topos y la cuadricula
+	//Crear objeto "game" , la cual, crea los "huecos" y la cuadricula
 	
 	Topo game = new Topo();
 	//Temporizador
-	Tempo gg = new Tempo();
+	Tempo temporizador = new Tempo();
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -51,7 +51,6 @@ public class Main extends Application {
 		menu.getChildren().addAll(welcome,start);
 	
 		//Establecer fondo
-		
 		BackgroundFill myBF = new BackgroundFill(Color.DARKOLIVEGREEN, new CornerRadii(1),
 		         new Insets(0.0,0.0,0.0,0.0));
 		menu.setBackground(new Background(myBF));
@@ -71,8 +70,11 @@ public class Main extends Application {
 		
 		//Puntuacion(Contador)---------------------------------------------------------------------------------------------------------
 		game.Puntuacion.setFont(new Font(20));
+		temporizador.time.setFont(new Font(20));
+		
+		juegoSP.setAlignment(temporizador.time, Pos.TOP_RIGHT);
 		juegoSP.setAlignment(game.Puntuacion,Pos.TOP_LEFT);
-		juegoSP.getChildren().addAll(game,game.Puntuacion);
+		juegoSP.getChildren().addAll(game,game.Puntuacion,temporizador.time);
 		//
 		
 		//Button bt = new Button();
