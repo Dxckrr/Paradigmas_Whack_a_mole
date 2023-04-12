@@ -24,6 +24,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 import javafx.scene.paint.Color;
+import java.util.random.*;
 
 
 
@@ -69,11 +70,17 @@ public class Topo extends Parent implements EventHandler<MouseEvent>{
 	    
 
 	};
-	public static void random() {
-		Random topoA = new Random();
-		topoA.nextInt(0,16);
+	
+	public  Rectangle getRandom(Rectangle[] rectangles) {
+		Random topoRandom = new Random();
+		
+		int randomIndex = topoRandom.nextInt(rectangles.length-1);
+		Rectangle randomRectangle = rectangles[randomIndex];
+		
+		return randomRectangle;
 		
 	}
+	
 	private void createTopo() {
 		//TOPOS-----------------------------------------------------------------------------------------------------------------------------------------
 		
@@ -87,7 +94,6 @@ public class Topo extends Parent implements EventHandler<MouseEvent>{
 		
 		//Recorriendo y creando los topos
 		for(int i=0; i< topo.length;i++) {
-			
 			topo[i] = new Rectangle(100,100); // topo[i] = new ImageView();
 			topo[i].setFill(Color.BLACK);	
 			topo[i].setOnMouseClicked(click);
@@ -102,6 +108,7 @@ public class Topo extends Parent implements EventHandler<MouseEvent>{
 			x++; 
 			Panel1.add(topo[i],x,y);	//Añadir elementos al layout
 		}
+		
 		
 		Panel1.setAlignment(Pos.CENTER);	//Centrar los elementos
 		this.getChildren().addAll(Panel1);
