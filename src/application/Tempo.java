@@ -17,7 +17,6 @@ public class Tempo extends Topo{
     
     public Tempo() {
     	crear();
-    	random();
         
     }
     
@@ -42,19 +41,4 @@ public class Tempo extends Topo{
  
     }
     
-    private void random() {
-
-        Timeline timeline = new Timeline();
-        timeline.setCycleCount(Animation.INDEFINITE); // Repite indefinidamente
-        timeline.getKeyFrames().add(
-                new KeyFrame(Duration.seconds(1.5), event -> {
-                   	//Funcion para generar un "topo" aleatorio"------------------------------------------------------------------------------------------------------
-        		    Rectangle randomRectangle = getRandom(topo);
-        	        // Cambiar el color del Rectangle seleccionado
-        		    
-        	        randomRectangle.setFill(Color.RED);
-                }));
-        timeline.play(); // Inicia la línea de tiempo
-
-    }
 }

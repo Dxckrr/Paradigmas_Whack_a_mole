@@ -2,6 +2,7 @@ package application;
 
 import java.util.Random;
 
+import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
@@ -41,6 +42,7 @@ public class Topo extends Parent implements EventHandler<MouseEvent>{
 			
 	public Topo() {
 		createTopo();
+		random();
 	}
 	
 	
@@ -67,18 +69,56 @@ public class Topo extends Parent implements EventHandler<MouseEvent>{
 	           
 	           timer.play();	//Funcion para correr el timer
 	    }
-	    
-
+	   
 	};
 	
 	public  Rectangle getRandom(Rectangle[] rectangles) {
 		Random topoRandom = new Random();
 		
-		int randomIndex = topoRandom.nextInt(rectangles.length-1);
+		int randomIndex = topoRandom.nextInt(rectangles.length);
 		Rectangle randomRectangle = rectangles[randomIndex];
 		
 		return randomRectangle;
 		
+		
+		
+	}
+	
+	public void random() {
+
+		Timeline timeline = new Timeline();
+		timeline.setCycleCount(Animation.INDEFINITE); // Repite indefinidamente
+
+		//Primer EVENTO 
+		timeline.getKeyFrames().add(
+				new KeyFrame(Duration.seconds(1), event -> {
+					//Funcion para generar un "topo" aleatorio"
+					Rectangle randomRectangle = getRandom(topo);
+					// Cambiar el color del Rectangle seleccionado
+					randomRectangle.setFill(Color.RED);
+					//La funcion setId define un "ID" para un "nodo" dentro del layout de los topos 
+					randomRectangle.setId("selected"); // Asignar un ID al Rectangle seleccionado
+
+				
+				}
+						)
+				);
+		//Segundo EVENTO
+		timeline.getKeyFrames().add(
+				new KeyFrame(Duration.seconds(2), event -> {
+					// Acceder al Rectangle seleccionado utilizando su ID
+					Rectangle RectangleAnterior = (Rectangle) Panel1.lookup("#selected");	//Aqui el "ID" es llamado con #<name> , para esto se usa lookup
+					if (RectangleAnterior != null) {
+						RectangleAnterior.setFill(Color.BLACK);
+						RectangleAnterior.setId(null); // Limpiar el ID del Rectangle
+						//Asi nos aseguramos de resetear la variable para el siguiente Frame
+					}
+				}
+					)
+				);
+		timeline.play(); // Inicia la línea de tiempo
+
+			
 	}
 	
 	private void createTopo() {
@@ -110,9 +150,12 @@ public class Topo extends Parent implements EventHandler<MouseEvent>{
 		}
 		
 		
+		
+		
 		Panel1.setAlignment(Pos.CENTER);	//Centrar los elementos
 		this.getChildren().addAll(Panel1);
 	}
+	
 
 
 }

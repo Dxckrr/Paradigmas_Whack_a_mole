@@ -40,18 +40,20 @@ public class Main extends Application {
 		welcome.setStyle(STYLESHEET_MODENA);
 		welcome.setFont(new Font(50));
 		Button start = new Button("Comenzar!");
-		start.setScaleX(5);
-		start.setScaleY(5);
+		start.setScaleX(2);
+		start.setScaleY(2);
+		
 		start.setOnAction(e-> window.setScene(juego)); 	// Funcion e-> para manejar eventos
 		
 		
 		//Escena 1 -MENU-
 		StackPane menu = new StackPane();
 		menu.setAlignment(welcome,Pos.TOP_CENTER);
+		menu.setAlignment(start,Pos.CENTER);
 		menu.getChildren().addAll(welcome,start);
 	
 		//Establecer fondo
-		BackgroundFill myBF = new BackgroundFill(Color.DARKOLIVEGREEN, new CornerRadii(1),
+		BackgroundFill myBF = new BackgroundFill(Color.DIMGRAY, new CornerRadii(1),
 		         new Insets(0.0,0.0,0.0,0.0));
 		menu.setBackground(new Background(myBF));
 		
