@@ -36,7 +36,7 @@ import java.util.random.*;
 public class TableroJuego extends Menu {
 	
 	Scene juego;
-	
+	VentanaFin endGame;
 	//Panel Stack
 	StackPane contendorPrincipal ;
 	//Puntuacion
@@ -193,7 +193,7 @@ public class TableroJuego extends Menu {
 		//final = no modificable
 		final IntegerProperty countdown;
 		
-    	countdown = new SimpleIntegerProperty(60); // Inicializa el contador en 60 segundos || IntergerProperty, para mostrar en UI
+    	countdown = new SimpleIntegerProperty(10); // Inicializa el contador en 60 segundos || IntergerProperty, para mostrar en UI
     	// Crea una línea de tiempo que actualiza el contador cada segundo
         Timeline timeline = new Timeline();
         timeline.setCycleCount(Animation.INDEFINITE); // Repite indefinidamente
@@ -204,6 +204,8 @@ public class TableroJuego extends Menu {
             	
                     if (countdown.get() == 0) {
                         timeline.stop(); // Detiene la línea de tiempo = "temporizador"  cuando el contador llega a 0
+                        window.close();
+                        endGame = new VentanaFin();
                     }
                 }));
         timeline.play(); // Inicia la línea de tiempo

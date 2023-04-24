@@ -25,7 +25,7 @@ import javafx.scene.text.TextAlignment;
 public class Main extends Application {
 	Menu menu;
 	@Override
-	public void start(Stage primaryStage) throws Exception {
+	public void start(Stage primaryStage) {
 		menu = new Menu();
 	}
 	
