@@ -61,8 +61,8 @@ public class TableroJuego extends Menu {
 	//Numero de errores
 	int vidas = 3;
 	
-	//Array de vidas   ||| Es list para que sea grafico
-	List<ImageView> corazones = new ArrayList<>();
+	//Array de vidas   
+	ImageView corazones[];
 	
 	private int random;
 	
@@ -82,6 +82,8 @@ public class TableroJuego extends Menu {
 		crearTableroScore();
 		//Crear botón para INICIAR partida
 		crearBotonInicioPartida();
+		//
+		crearVidas();
 		// PANTALLA COMPLETA
 		window.setFullScreen(true);
 
@@ -104,7 +106,7 @@ public class TableroJuego extends Menu {
 		for (int i = 0; i < topos.length; i++) {
 			
 			topos[i] = new Hole(size); // topo[i] = new ImageView();
-			
+			topos[i].getHueco().setOnMouseClicked(click);
 		
 			if(i %dimensiones == 0) {
 				ancho=0;
@@ -124,7 +126,6 @@ public class TableroJuego extends Menu {
 		cuadricula.setAlignment(Pos.CENTER);
 		contendorPrincipal.getChildren().addAll(cuadricula);
 		
-		crearVidas();
 		juego = new Scene(contendorPrincipal,1080,720);
 		window.setScene(juego);
 		
@@ -136,17 +137,21 @@ public class TableroJuego extends Menu {
 		contenedorVidas.setSpacing(5); // establecer el espacio entre las imágenes de corazones
 		contenedorVidas.setAlignment(Pos.CENTER_RIGHT); // establecer la alineación de las imágenes de corazones en el centro del VBox
 		
-	      for (int i = 0; i < vidas; i++) {
+		
+		corazones = new ImageView[vidas];
+	      for (int i = 0; i < corazones.length; i++) {
 	    	ImageView corazon = new ImageView("/corazon.png");
 	    	corazon.setFitHeight(80);	//Alto
 	    	corazon.setFitWidth(80);	//Ancho
+	    	corazones[i] = corazon;
 		    contenedorVidas.setMargin(corazon, new Insets(1)); // establecer el margen de cada imagen de corazón
 		    contenedorVidas.getChildren().add(corazon); // agregar la imagen de corazón al VBox
+		   
 		}
 
 		contendorPrincipal.getChildren().add(contenedorVidas); // agregar el VBox al contenedor principal
+		contenedorVidas.toBack();	//Colocar atras PARA NO OBSTRUIR AL TABLERO
 		contendorPrincipal.setMargin(contenedorVidas, new Insets(0,0, 600, 150)); // establecer un margen (ABAJO,IZQUIERDA,ARRIBA,DERECHA)
-
 		//contendorPrincipal.setAlignment(contenedorVidas, new Insets(10));
 
 	}
@@ -154,7 +159,8 @@ public class TableroJuego extends Menu {
 	private void restarVidas() {
         vidas--; // reducir el número de vidas restantes en 1
         if (vidas >= 0) {
-            corazones.get(vidas).setVisible(false); // ocultar la imagen de corazón correspondiente
+        	corazones[vidas].setVisible(false);
+          //  corazones.get(vidas).setVisible(false); // ocultar la imagen de corazón correspondiente
         }
         if (vidas == 0) {
             endGame = new VentanaFin(); // salir del programa si no hay más vidas restantes
@@ -166,8 +172,9 @@ public class TableroJuego extends Menu {
 		EventHandler<MouseEvent> click = new EventHandler<MouseEvent>() {
 		    @Override
 		    public void handle(MouseEvent event) {
+		    	
 		    	System.out.println(topos[random].isVerfificarTopo());
-		    	if(topos[random].isVerfificarTopo()) {
+		    	if(event.getSource() == topos[random].getHueco()) {
 		    		
 			    	//Actualizar contador
 			    	
@@ -189,7 +196,9 @@ public class TableroJuego extends Menu {
 			           timer.play();	//Funcion para correr el timer
 		    		
 		    	}
-		      	topos[random].setVerificarTopo(false);
+		    	else {
+		    		restarVidas();
+		    	}
 
 		    }
 		   
@@ -311,7 +320,7 @@ public class TableroJuego extends Menu {
 						topos[random].setVerificarTopo(true);
 						//La funcion setId define un "ID" para un "nodo" dentro del layout de los topos 
 						topos[random].getHueco().setId("selected"); // Asignar un ID al Rectangle seleccionado
-						topos[random].getHueco().setOnMouseClicked(click);
+					//	topos[random].getHueco().setOnMouseClicked(click);
 					
 					}
 							)
@@ -322,12 +331,13 @@ public class TableroJuego extends Menu {
 						// Acceder al Rectangle seleccionado utilizando su ID
 						Rectangle RectangleAnterior = (Rectangle) cuadricula.lookup("#selected");	//Aqui el "ID" es llamado con #<name> , para esto se usa lookup
 						if (RectangleAnterior != null) {
-							RectangleAnterior.setOnMouseClicked(null);
+							//RectangleAnterior.setOnMouseClicked(null);
+							topos[random].setVerificarTopo(false);
 							RectangleAnterior.setFill(Color.BLACK);
 							RectangleAnterior.setId(null); // Limpiar el ID del Rectangle
 							//Asi nos aseguramos de resetear la variable para el siguiente Frame
-							
 						}
+						
 					}
 						)
 					);
