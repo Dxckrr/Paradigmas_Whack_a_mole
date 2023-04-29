@@ -69,15 +69,16 @@ public class Menu {
 
 	//Dificultades
 
-	final int dificultad1 = 4;
-	final int dificultad2 = 6;
-	final int dificultad3 = 8;
+	//DIMENSIONES
+	final int dimensiones1 = 4;
+	final int dimensiones2 = 6;
+	final int dimensiones3 = 8;
 	
 	//Tamaño hueco
 	
-	final int tamaño1 = 100;
-	final int tamaño2 = 75;
-	final int tamaño3 = 50;
+	final int tamaño1 = 150;		//100 75 50
+	final int tamaño2 = 125;
+	final int tamaño3 = 100;
 	
 	//Distancia entre huecos
 	
@@ -98,7 +99,7 @@ public class Menu {
 		crearseleccionModalidad();
 		//generarBotonesDificultad();
 		//Establecer Icono
-	      Image iconTopo = new Image(getClass().getResourceAsStream("/Topo.png"));
+	      Image iconTopo = new Image(getClass().getResourceAsStream("/iconoJuego.png"));
 	      window.getIcons().add(iconTopo);
 	}
 	
@@ -315,16 +316,16 @@ public class Menu {
 		public void handle(MouseEvent event) {
 			if(event.getSource()== facil) {
 				window.close();
-				new TableroJuego(dificultad1, tamaño1,distanciaVerticalFacil,distanciaHorizontalFacil);
+				new TableroJuego(dimensiones1, tamaño1,distanciaVerticalFacil,distanciaHorizontalFacil);
 				
 			}
 			else if(event.getSource()== medio) {
 				window.close();
-				new TableroJuego(dificultad2, tamaño2,distanciaVerticalMedio,distanciaHorizontalMedio);
+				new TableroJuego(dimensiones2, tamaño2,distanciaVerticalMedio,distanciaHorizontalMedio);
 			}
 			else if(event.getSource()== dificil) {
 				window.close();
-				new TableroJuego(dificultad3, tamaño3,distanciaVerticalDificil,distanciaHorizontalDificil);
+				new TableroJuego(dimensiones3, tamaño3,distanciaVerticalDificil,distanciaHorizontalDificil);
 			}
 
 		}

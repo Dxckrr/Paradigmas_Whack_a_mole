@@ -17,6 +17,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
@@ -38,33 +39,53 @@ import java.util.random.*;
 
 public class TableroJuego extends Menu {
 	
+	//ESCENAS
 	Scene juego;
-	
 	VentanaFin endGame;
+	
+	//CONTENEDORES (PANEL)
+	
 	//Panel Stack
 	StackPane contendorPrincipal ;
-	//Puntuacion
-	Label puntuacion;
-	
-	//VBOX para las VIDAS
-	VBox contenedorVidas;
-	
 	//Panel
 	GridPane cuadricula;
+	//VBOX para las VIDAS
+	VBox contenedorVidas;
+
+	//OBJETOS / ELEMENTOS
+	
 	//Array "TOPOS"
 	Hole [] topos ;
+	//Array de vidas   
+	ImageView corazones[];
+	//Puntuacion
+	Label puntuacion;
 	//Temporizador
 	Label temporizador;
 	//Boton para comenzar
 	Button botonStart;
 	
+	//VARIABLES DEFINIDAS
 	//Numero de errores
 	int vidas = 3;
-	
-	//Array de vidas   
-	ImageView corazones[];
-	
+	//
+    private static int contador = 0;
+	//
 	private int random;
+	
+	//IMAGENES
+	Image hueco = new Image("/Hueco.png");
+	Image topoFuera = new Image("/Hueco_TopoFuera.png");
+	Image topoGolpeado = new Image("/corazon.png");
+	
+	//Controladro ClICK
+	
+	boolean clickPermitido;
+	
+	
+	
+	
+	
 	
 	public TableroJuego(int dimensiones,int size,int vertical, int horizontal) {
 		
@@ -96,7 +117,6 @@ public class TableroJuego extends Menu {
 		//Distancia entre topos
 		cuadricula.setVgap(vertical);
 		cuadricula.setHgap(horizontal);
-		
 		//Inicializando ubicacion 
 		
 		int ancho = 0;
@@ -125,6 +145,8 @@ public class TableroJuego extends Menu {
 		//Agregar GridPane creado a contenedorVentana 
 		cuadricula.setAlignment(Pos.CENTER);
 		contendorPrincipal.getChildren().addAll(cuadricula);
+		
+
 		
 		juego = new Scene(contendorPrincipal,1080,720);
 		window.setScene(juego);
@@ -169,46 +191,51 @@ public class TableroJuego extends Menu {
 	
 		//Creando el evento CLICK AL HUECO
 	    //  private void eventoClickHueco() 
-		EventHandler<MouseEvent> click = new EventHandler<MouseEvent>() {
-		    @Override
-		    public void handle(MouseEvent event) {
-		    	
-		    	System.out.println(topos[random].isVerfificarTopo());
-		    	if(event.getSource() == topos[random].getHueco()) {
-		    		
-			    	//Actualizar contador
-			    	
-			    	incrementarContador();
-		            puntuacion.setText("Puntuacion: " + obtenerContador());
-			    	//Crear un nuevo rectangle en donde se conoce a que rectangulo se da "click"
-		            
-			    	   Rectangle rectangle = (Rectangle) event.getSource();
-			           
-			           // Establecer el color de relleno del Rectangle
-			           rectangle.setFill(Color.CORNFLOWERBLUE);
-			           
-			           //Creando "timer" para devolver el rectangulo a su color original
-			           
-			           Timeline timer = new Timeline(new KeyFrame(
-			                   Duration.seconds(0.5),	//Duracion
-			                   e -> rectangle.setFill(Color.BLACK) ));	//Devolviendo el color al recttangulo, en este caso "BLACK"
-			           
-			           timer.play();	//Funcion para correr el timer
-		    		
-		    	}
-		    	else {
-		    		restarVidas();
-		    	}
+	EventHandler<MouseEvent> click = new EventHandler<MouseEvent>() {
+		@Override
+		public void handle(MouseEvent event) {
+			
+			if(clickPermitido) {
+				clickPermitido = false;
+				System.out.println(topos[random].isVerfificarTopo());
+				if(event.getSource() == topos[random].getHueco()) {
+					//Actualizar contador
 
-		    }
-		   
-		};
-		
+					incrementarContador();
+					puntuacion.setText("Puntuacion: " + obtenerContador());
+					//Crear un nuevo rectangle en donde se conoce a que rectangulo se da "click"
+
+					Hole topoSeleccionado = (Hole) event.getSource();
+
+					// Establecer el color de relleno del Rectangle
+					topoSeleccionado.setImage(topoGolpeado);
+
+					//Creando "timer" para devolver el rectangulo a su color original
+
+					Timeline timer = new Timeline(new KeyFrame(
+							Duration.seconds(0.5),	//Duracion
+							e -> topoSeleccionado.setImage(hueco)));	//Devolviendo el color al recttangulo, en este caso "BLACK"
+					
+					timer.play();	//Funcion para correr el timer
+					
+					
+				}
+				else {
+					restarVidas();
+				}
+				
+			}
+
+
+		}
+
+	};
+
 
 
 	private void crearContadorTiempoJuego() {
 		temporizador = new Label("Tiempo: 00 ");
-		temporizador.setFont(new Font(20));
+		temporizador.setFont(new Font("Verdana",20));
 		//crear objeto grafico que muestra el tiempo transcurrido de juego
 		//AQUI SOLAMENTE se crea el elemento gráfico, NO se inicia automáticamente
 		//Agregar panel a contenedorVentana
@@ -221,7 +248,7 @@ public class TableroJuego extends Menu {
 	
 	private void crearTableroScore() {
 		puntuacion = new Label("Puntuacion: 0 ");
-		puntuacion.setFont(new Font(20));
+		puntuacion.setFont(new Font("Verdana",20));
 		//crear objeto grafico que muestra el tablero de score
 		//AQUI SOLAMENTE se crea el elemento gráfico, NO se inicia automáticamente
 		//Agregar panel a contenedorVentana
@@ -233,7 +260,7 @@ public class TableroJuego extends Menu {
 	private void crearBotonInicioPartida() {
 		
 		botonStart = new Button("Iniciar!");
-		botonStart.setFont(new Font(30));
+		botonStart.setFont(new Font("Verdana",30));
 		
 		contendorPrincipal.getChildren().add(botonStart);
 		contendorPrincipal.setAlignment(botonStart,Pos.BOTTOM_RIGHT);
@@ -273,7 +300,6 @@ public class TableroJuego extends Menu {
 		
 	}
 	//-----------------------------------------------------
-    private static int contador = 0;
 
     public static void incrementarContador() {
         contador++;
@@ -296,7 +322,7 @@ public class TableroJuego extends Menu {
 		Random topoRandom = new Random();
 		
 		int randomIndex = topoRandom.nextInt(rectangles.length);
-		Rectangle randomRectangle = rectangles[randomIndex].getHueco();
+		//Rectangle randomRectangle = rectangles[randomIndex].getHueco();
 		
 		return randomIndex;
 	}
@@ -316,12 +342,13 @@ public class TableroJuego extends Menu {
 						// Cambiar el color del Rectangle seleccionado
 						this.random = getRandom(topos);
 						
-						topos[random].getHueco().setFill(Color.RED);
+					//	topos[random].getHueco().setFill(Color.RED);
+						topos[random].getHueco().setImage(topoFuera);
 						topos[random].setVerificarTopo(true);
 						//La funcion setId define un "ID" para un "nodo" dentro del layout de los topos 
 						topos[random].getHueco().setId("selected"); // Asignar un ID al Rectangle seleccionado
 					//	topos[random].getHueco().setOnMouseClicked(click);
-					
+						clickPermitido = true;
 					}
 							)
 					);
@@ -329,13 +356,16 @@ public class TableroJuego extends Menu {
 			timeline.getKeyFrames().add(
 					new KeyFrame(Duration.seconds(2), event -> {
 						// Acceder al Rectangle seleccionado utilizando su ID
-						Rectangle RectangleAnterior = (Rectangle) cuadricula.lookup("#selected");	//Aqui el "ID" es llamado con #<name> , para esto se usa lookup
-						if (RectangleAnterior != null) {
+						ImageView TopoAnterior = (ImageView) cuadricula.lookup("#selected");	//Aqui el "ID" es llamado con #<name> , para esto se usa lookup
+						if (TopoAnterior != null) {
 							//RectangleAnterior.setOnMouseClicked(null);
 							topos[random].setVerificarTopo(false);
-							RectangleAnterior.setFill(Color.BLACK);
-							RectangleAnterior.setId(null); // Limpiar el ID del Rectangle
+							// Se recoloca el hueco
+							TopoAnterior.setImage(hueco);
+							TopoAnterior.setId(null); // Limpiar el ID del Rectangle
 							//Asi nos aseguramos de resetear la variable para el siguiente Frame
+							
+							clickPermitido = false;
 						}
 						
 					}

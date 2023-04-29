@@ -1,20 +1,26 @@
 package application;
 
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 public class Hole {
 	
-	Rectangle hueco;
+	ImageView hueco;
 	boolean verificarTopo = false;
 	
 	public Hole(int size) {
 		//Crear hueco
-		hueco = new Rectangle(size,size); // topo[i] = new ImageView();
-		hueco.setFill(Color.BLACK);
+		hueco = new ImageView("/Hueco.png"); // topo[i] = new ImageView();
+		//Definir ancho y alto
+		hueco.setFitWidth(size);
+		hueco.setFitHeight(size);
+
+		//hueco.setFill(Color.BLACK);
 	
 	}
-	public Rectangle getHueco() {
+	public ImageView getHueco() {
 		return hueco;
 	}
 	
@@ -27,5 +33,9 @@ public class Hole {
 		return verificarTopo;
 	}
 	
+	public void setImage(Image Imagen) {
+		
+		hueco.setImage(Imagen);
+	}
 
 }
