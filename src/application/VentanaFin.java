@@ -25,6 +25,7 @@ public class VentanaFin {
 		finallll = new Scene(fin,1080,720);
 
 		window.setScene(finallll);
+		window.setFullScreen(true);
 		window.show();
 		
 	}

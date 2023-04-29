@@ -1,5 +1,7 @@
 package application;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import javafx.animation.Animation;
@@ -15,6 +17,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -36,11 +39,16 @@ import java.util.random.*;
 public class TableroJuego extends Menu {
 	
 	Scene juego;
+	
 	VentanaFin endGame;
 	//Panel Stack
 	StackPane contendorPrincipal ;
 	//Puntuacion
 	Label puntuacion;
+	
+	//VBOX para las VIDAS
+	VBox contenedorVidas;
+	
 	//Panel
 	GridPane cuadricula;
 	//Array "TOPOS"
@@ -49,6 +57,12 @@ public class TableroJuego extends Menu {
 	Label temporizador;
 	//Boton para comenzar
 	Button botonStart;
+	
+	//Numero de errores
+	int vidas = 3;
+	
+	//Array de vidas   ||| Es list para que sea grafico
+	List<ImageView> corazones = new ArrayList<>();
 	
 	private int random;
 	
@@ -68,6 +82,9 @@ public class TableroJuego extends Menu {
 		crearTableroScore();
 		//Crear botón para INICIAR partida
 		crearBotonInicioPartida();
+		// PANTALLA COMPLETA
+		window.setFullScreen(true);
+
 		
 	}
 	
@@ -107,11 +124,42 @@ public class TableroJuego extends Menu {
 		cuadricula.setAlignment(Pos.CENTER);
 		contendorPrincipal.getChildren().addAll(cuadricula);
 		
+		crearVidas();
 		juego = new Scene(contendorPrincipal,1080,720);
 		window.setScene(juego);
 		
 		
 	}
+	
+	private void crearVidas() {
+		contenedorVidas = new VBox();
+		contenedorVidas.setSpacing(5); // establecer el espacio entre las imágenes de corazones
+		contenedorVidas.setAlignment(Pos.CENTER_RIGHT); // establecer la alineación de las imágenes de corazones en el centro del VBox
+		
+	      for (int i = 0; i < vidas; i++) {
+	    	ImageView corazon = new ImageView("/corazon.png");
+	    	corazon.setFitHeight(80);	//Alto
+	    	corazon.setFitWidth(80);	//Ancho
+		    contenedorVidas.setMargin(corazon, new Insets(1)); // establecer el margen de cada imagen de corazón
+		    contenedorVidas.getChildren().add(corazon); // agregar la imagen de corazón al VBox
+		}
+
+		contendorPrincipal.getChildren().add(contenedorVidas); // agregar el VBox al contenedor principal
+		contendorPrincipal.setMargin(contenedorVidas, new Insets(0,0, 600, 150)); // establecer un margen (ABAJO,IZQUIERDA,ARRIBA,DERECHA)
+
+		//contendorPrincipal.setAlignment(contenedorVidas, new Insets(10));
+
+	}
+	
+	private void restarVidas() {
+        vidas--; // reducir el número de vidas restantes en 1
+        if (vidas >= 0) {
+            corazones.get(vidas).setVisible(false); // ocultar la imagen de corazón correspondiente
+        }
+        if (vidas == 0) {
+            endGame = new VentanaFin(); // salir del programa si no hay más vidas restantes
+        }
+    }
 	
 		//Creando el evento CLICK AL HUECO
 	    //  private void eventoClickHueco() 
@@ -147,8 +195,8 @@ public class TableroJuego extends Menu {
 		   
 		};
 		
-	
-	
+
+
 	private void crearContadorTiempoJuego() {
 		temporizador = new Label("Tiempo: 00 ");
 		temporizador.setFont(new Font(20));
@@ -193,7 +241,7 @@ public class TableroJuego extends Menu {
 		//final = no modificable
 		final IntegerProperty countdown;
 		
-    	countdown = new SimpleIntegerProperty(10); // Inicializa el contador en 60 segundos || IntergerProperty, para mostrar en UI
+    	countdown = new SimpleIntegerProperty(40); // Inicializa el contador en 60 segundos || IntergerProperty, para mostrar en UI
     	// Crea una línea de tiempo que actualiza el contador cada segundo
         Timeline timeline = new Timeline();
         timeline.setCycleCount(Animation.INDEFINITE); // Repite indefinidamente

@@ -132,6 +132,8 @@ public class Menu {
 		contenedorModalidades.getChildren().addAll(unJugador,dosJugadores);
 		
 		modalidadJugadores = new Scene(contenedorModalidades,480,240);
+		modalidadJugadores.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+		
 		window.setScene(modalidadJugadores);
 		window.setTitle("Wacamole"); 	//Estableciendo titulo
 		window.show();
@@ -167,8 +169,9 @@ public class Menu {
 	        contenedorObtenerNombre.getChildren().addAll(nombre, escribirNombre, saveNombreButton);
 	 
 	      introducirNombres = new Scene(contenedorObtenerNombre, 480, 240);
-
+	      introducirNombres.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 	        window.setScene(introducirNombres);
+	        
 
 	}
 
@@ -211,16 +214,14 @@ public class Menu {
 
 	    contenedorObtenerNombre.getChildren().add(contenedorModalidad2Jugadores);
 	    introducirNombres = new Scene(contenedorObtenerNombre, 720, 480);
+	    introducirNombres.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+
 	    window.setScene(introducirNombres);
      
 	}
 
 
 
-
-	
-
-			
 			//if(returnNombre(savedPlayer) == true) {
 			//	generarBotonesDificultad();
 				
@@ -231,8 +232,8 @@ public class Menu {
 			savedPlayer[i] = nombrePlayer;
 		}	
 	}
-	
 
+	
 	private void generarBotonesDificultad(String player) {
 
 	//	window = new Stage();
@@ -240,6 +241,9 @@ public class Menu {
 	//	window.setResizable(true);
 		Text welcome = new Text("Bienvenido "+player+"!");
 		welcome.setFont(new Font(50));
+		//welcome.setStyle("-fx-font-family: 'MiFuentePersonalizada'; -fx-font-size: 50px; -fx-font-weight: bold; -fx-fill: #333333;");
+
+		
 		Text selecion = new Text("Seleccione una dificultad!");
 		selecion.setFont(new Font(30));
 
@@ -295,9 +299,11 @@ public class Menu {
 		backgroundImageView.toBack();	 // .toBack mande la imagen atras
 
 		 seleccionDificultades = new Scene(contenedorMenu,1080,720);
+		 seleccionDificultades.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 
 		window.setScene(seleccionDificultades);	//Estableciendo el comienzo
 
+		window.setFullScreen(true);
 		
 	}
 
