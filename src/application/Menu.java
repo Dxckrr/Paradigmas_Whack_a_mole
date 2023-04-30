@@ -63,8 +63,8 @@ public class Menu {
 	TextField  nombresPlayer2;
 	
 	//Nombres guardados
-	String savedPlayer1;
-	String [] savedPlayer = new String[modalidad2Players];
+	
+	String [] savedPlayers;	//= new String[modalidad2Players];
 	
 
 	//Dificultades
@@ -118,8 +118,16 @@ public class Menu {
 		dosJugadores.setScaleX(2);
 		dosJugadores.setScaleY(2);
 
-		unJugador.setOnAction(e-> generarPedirNombreUnJugador());
-		dosJugadores.setOnAction(e-> generarPedirNombreDosJugadores());
+		unJugador.setOnAction(e -> {
+			
+		    generarPedirNombreUnJugador();
+		    savedPlayers = new String[1];
+		});
+		dosJugadores.setOnAction(e -> {
+			
+		    generarPedirNombreDosJugadores();
+		    savedPlayers = new String[2];
+		});
 		
 		contenedorModalidades = new StackPane();
 		
@@ -147,7 +155,7 @@ public class Menu {
 		contenedorObtenerNombre = new StackPane();
 		
 			escribirNombre = new Label("Jugador , Escribe tu nombre:");
-			escribirNombre.setFont(new Font("Monospaced",20));
+			escribirNombre.setFont(new Font("Verdana",20));
 			nombre = new TextField();
 			
 			//Ancho y largo
@@ -159,9 +167,9 @@ public class Menu {
 
 	        saveNombreButton.setOnAction(event -> {
 	            // savedText = String.valueOf(nombre1.getText()); // Obtener el texto del cuadro de texto
-	        		savedPlayer1 = nombre.getText();
+	        		//nombre.getText = nombre del Jugador
 	        	    guardarNombre(nombre.getText());
-	        	    generarBotonesDificultad(savedPlayer1);
+	        	    generarBotonesDificultad(nombre.getText(),"");
 	        	
 	        });
 	        
@@ -186,9 +194,9 @@ public class Menu {
 	    contenedorModalidad2Jugadores.setVgap(20);
 
 	    escribirNombrePlayer1 = new Label("Jugador 1, Escribe tu nombre:");
-	    escribirNombrePlayer1.setFont(new Font("Monospaced",20));
+	    escribirNombrePlayer1.setFont(new Font("Verdana",20));
 	    escribirNombrePlayer2 = new Label("Jugador 2, Escribe tu nombre:");
-	    escribirNombrePlayer2.setFont(new Font("Monospaced",20));
+	    escribirNombrePlayer2.setFont(new Font("Verdana",20));
 
 	    nombresPlayer1 = new TextField();
 	    nombresPlayer2 = new TextField();
@@ -201,9 +209,9 @@ public class Menu {
 	    saveNombreButton.setFont(new Font(20));
 
 	    saveNombreButton.setOnAction(event -> {
-	        guardarNombre(nombresPlayer1.getText());
-	        guardarNombre(nombresPlayer2.getText());
-	        generarBotonesDificultad(nombresPlayer1.getText());
+	        guardarNombre(nombresPlayer1.getText(),nombresPlayer2.getText());
+	      //  guardarNombre(nombresPlayer2.getText());
+	        generarBotonesDificultad(nombresPlayer1.getText(),", "+nombresPlayer2.getText());
 
 	    });
 
@@ -229,18 +237,31 @@ public class Menu {
 			//}
 
 	private void guardarNombre(String nombrePlayer) {
-		for(int i= 0; i< savedPlayer.length ; i++) {
-			savedPlayer[i] = nombrePlayer;
+		
+
+		for(int i= 0; i< savedPlayers.length ; i++) {
+			savedPlayers[i] = nombrePlayer;
+			System.out.println(savedPlayers[i]);
+		}	
+	}
+	private void guardarNombre(String nombrePlayer,String nombrePlayer2) {
+
+		for(int i= 0; i< savedPlayers.length ; i++) {
+			savedPlayers[i] = nombrePlayer;
+			if(i == 1) {
+				savedPlayers[i] = nombrePlayer2;
+			}
+			System.out.println(savedPlayers[i]);
 		}	
 	}
 
 	
-	private void generarBotonesDificultad(String player) {
+	private void generarBotonesDificultad(String player,String player2) {
 
 	//	window = new Stage();
 	//	window.setFullScreen(true);
 	//	window.setResizable(true);
-		Text welcome = new Text("Bienvenido "+player+"!");
+		Text welcome = new Text("Bienvenido(s) "+player+player2+"!");
 		welcome.setFont(new Font(50));
 		//welcome.setStyle("-fx-font-family: 'MiFuentePersonalizada'; -fx-font-size: 50px; -fx-font-weight: bold; -fx-fill: #333333;");
 
@@ -314,18 +335,32 @@ public class Menu {
 	EventHandler<MouseEvent> click = new EventHandler<MouseEvent>() {
 		@Override
 		public void handle(MouseEvent event) {
-			if(event.getSource()== facil) {
+			
+			if(event.getSource()== facil) {	//&& savedPlayers.length == 2)
 				window.close();
-				new TableroJuego(dimensiones1, tamaño1,distanciaVerticalFacil,distanciaHorizontalFacil);
+			/*	for(int i=0 ; i< savedPlayers.length; i++) {
+					TableroJuego juego = new TableroJuego(dimensiones1, tamaño1,distanciaVerticalFacil,distanciaHorizontalFacil,savedPlayers[0]);
+					while(!juego.isPlaying()) {
+						TableroJuego juego2 = new TableroJuego(dimensiones2, tamaño2, distanciaVerticalFacil, distanciaHorizontalFacil, savedPlayers[1]);
+					}*/
+					for(int i = 0; i< savedPlayers.length;i++) {
+						new TableroJuego(dimensiones1, tamaño1,distanciaVerticalFacil,distanciaHorizontalFacil,savedPlayers[i]);
+					}
+				}
+					
 				
-			}
+			
 			else if(event.getSource()== medio) {
 				window.close();
-				new TableroJuego(dimensiones2, tamaño2,distanciaVerticalMedio,distanciaHorizontalMedio);
+				for(int i = 0; i< savedPlayers.length;i++) {
+					new TableroJuego(dimensiones2, tamaño2,distanciaVerticalMedio,distanciaHorizontalMedio,savedPlayers[i]);
+				}
 			}
 			else if(event.getSource()== dificil) {
 				window.close();
-				new TableroJuego(dimensiones3, tamaño3,distanciaVerticalDificil,distanciaHorizontalDificil);
+				for(int i = 0; i< savedPlayers.length;i++) {
+					new TableroJuego(dimensiones3, tamaño3,distanciaVerticalDificil,distanciaHorizontalDificil,savedPlayers[i]);
+				}
 			}
 
 		}

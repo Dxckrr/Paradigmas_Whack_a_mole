@@ -34,7 +34,6 @@ public class Hole {
 	}
 	
 	public void setImage(Image Imagen) {
-		
 		hueco.setImage(Imagen);
 	}
 

@@ -61,7 +61,13 @@ public class TableroJuego extends Menu {
 	//Array de vidas   
 	ImageView corazones[];
 	//Puntuacion
-	Label puntuacion;
+	Label puntuacion;	//Objeto Grafico
+	
+	//Guadar Puntuacion
+	String[] puntuacionSaved;
+	//Jugador Actual
+	String [] jugadorActual;
+	
 	//Temporizador
 	Label temporizador;
 	//Boton para comenzar
@@ -74,49 +80,68 @@ public class TableroJuego extends Menu {
     private static int contador = 0;
 	//
 	private int random;
-
+	
+	//
+	boolean jugando;
 	//Controladro ClICK
 	boolean clickPermitido;
 	
 	//IMAGENES
 	Image hueco = new Image("/Hueco.png");
 	Image topoFuera = new Image("/Hueco_TopoFuera.png");
-	Image topoGolpeado = new Image("/corazon.png");
-	
+	Image topoGolpeado = new Image("/Hueco_TopoGolpeado.png");
 	//Mouse
 	Image mousePredeterminado = new Image("/Mouse_Neutral.png");
 	Image mouseClick = new Image("/Mouse_Click.png");
 
 
 	
-	public TableroJuego(int dimensiones,int size,int vertical, int horizontal) {
+	public TableroJuego(int dimensiones,int size,int vertical, int horizontal,String savedPlayer) {
 		
-		topos = new Hole [dimensiones*dimensiones];
+		jugando = true;
+		//Definir Cantidad topos
+		
+		topos = new Hole[dimensiones * dimensiones];
+		
+		//Definir cantidad jugadores | Puntuaciones
+		
+		jugadorActual = savedPlayers;
+		puntuacionSaved = new String[2];
+		
+		
 		//Inicializar contenedor elementos
 		
 		contendorPrincipal = new StackPane();
 		cuadricula = new GridPane();
 		
-		//Crear tablero o cuadricula
-		crearCuadricula(dimensiones,size,vertical,horizontal);
-		//Crear contador de tiempo transcurrido
+		// Crear tablero o cuadricula
+		crearCuadricula(dimensiones, size, vertical, horizontal);
+		
+		// Crear contador de tiempo transcurrido
 		crearContadorTiempoJuego();
-		//Crear cuadro de score
+		
+		// Crear cuadro de score
 		crearTableroScore();
-		//Crear botón para INICIAR partida
+		
+		// Crear botón para INICIAR partida
 		crearBotonInicioPartida();
+		
 		//
 		crearVidas();
+
 		// PANTALLA COMPLETA
 		window.setFullScreen(true);
-		//Definir cursor
 		
-		Cursor cursor = new ImageCursor(mousePredeterminado, mousePredeterminado.getWidth() / 2, mousePredeterminado.getHeight() / 2);
-		
+		// Definir cursor
+		Cursor cursor = new ImageCursor(mousePredeterminado, mousePredeterminado.getWidth() / 2,
+				mousePredeterminado.getHeight() / 2);
+
 		juego.setCursor(cursor);
 
 		
 	}
+
+
 	
 	private void crearCuadricula(int dimensiones, int size,int vertical, int horizontal ) {
 		//Crear la cuadricula (GridPane)
@@ -193,7 +218,8 @@ public class TableroJuego extends Menu {
         }
         if (vidas == 0) {
         	window.close();
-            endGame = new VentanaFin(); // salir del programa si no hay más vidas restantes
+        	jugando = false;
+            endGame = new VentanaFin(savedPlayers,puntuacionSaved); // salir del programa si no hay más vidas restantes
         }
     }
 	
@@ -202,7 +228,6 @@ public class TableroJuego extends Menu {
 	EventHandler<MouseEvent> click = new EventHandler<MouseEvent>() {
 		@Override
 		public void handle(MouseEvent event) {
-			
 			if(clickPermitido) {
 				clickPermitido = false;
 				System.out.println(topos[random].isVerfificarTopo());
@@ -218,7 +243,7 @@ public class TableroJuego extends Menu {
 					puntuacion.setText("Puntuacion: " + obtenerContador());
 					//Crear un nuevo rectangle en donde se conoce a que rectangulo se da "click"
 
-					Hole topoSeleccionado = (Hole) event.getSource();
+					ImageView topoSeleccionado = (ImageView) event.getSource();
 
 					// Establecer el color de relleno del Rectangle
 					topoSeleccionado.setImage(topoGolpeado);
@@ -277,7 +302,7 @@ public class TableroJuego extends Menu {
 	
 	
 	private void crearTableroScore() {
-		puntuacion = new Label("Puntuacion: 0 ");
+		puntuacion = new Label("Puntuacion: ");
 		puntuacion.setFont(new Font("Verdana",20));
 		//crear objeto grafico que muestra el tablero de score
 		//AQUI SOLAMENTE se crea el elemento gráfico, NO se inicia automáticamente
@@ -296,14 +321,14 @@ public class TableroJuego extends Menu {
 		contendorPrincipal.setAlignment(botonStart,Pos.BOTTOM_RIGHT);
 		botonStart.setOnMouseClicked(e -> {
 			//Ejecutar todas las funcionas al dar "click" en el BOTON
-			
-			   	//reiniciarScore();
+				botonStart.setVisible(false);
+			   	crearTableroScore();
 			    reiniciarTiempoJuego();
 			    reiniciarGeneracionTopo();
 			});
 		}
 
-	private void reiniciarTiempoJuego() {	//Error al reset
+	private void reiniciarTiempoJuego() {	
 		//final = no modificable
 		final IntegerProperty countdown;
 		
@@ -319,16 +344,14 @@ public class TableroJuego extends Menu {
                     if (countdown.get() == 0) {
                         timeline.stop(); // Detiene la línea de tiempo = "temporizador"  cuando el contador llega a 0
                         window.close();
-                        endGame = new VentanaFin();
+                        jugando = false;
+                        endGame = new VentanaFin(savedPlayers,puntuacionSaved);
                     }
                 }));
         timeline.play(); // Inicia la línea de tiempo
 	}
 
-	private void reiniciarScore() {
-		puntuacion = new Label("Puntuacion:");
-		
-	}
+
 	//-----------------------------------------------------
 
     public static void incrementarContador() {
@@ -357,7 +380,7 @@ public class TableroJuego extends Menu {
 		return randomIndex;
 	}
 	private void reiniciarGeneracionTopo() {
-		
+			
 			
 			Timeline timeline = new Timeline();
 			timeline.setCycleCount(Animation.INDEFINITE); // Repite indefinidamente

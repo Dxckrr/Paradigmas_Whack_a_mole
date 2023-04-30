@@ -11,7 +11,7 @@ public class VentanaFin {
 	Label finaly;
 	StackPane fin;
 	
-	public VentanaFin() {
+	public VentanaFin(String [] savedPlayers, String[] savedPuntuacion) {
 		crearFinal();
 	}
 	
