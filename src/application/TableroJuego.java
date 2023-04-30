@@ -13,6 +13,8 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
+import javafx.scene.ImageCursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -72,20 +74,20 @@ public class TableroJuego extends Menu {
     private static int contador = 0;
 	//
 	private int random;
+
+	//Controladro ClICK
+	boolean clickPermitido;
 	
 	//IMAGENES
 	Image hueco = new Image("/Hueco.png");
 	Image topoFuera = new Image("/Hueco_TopoFuera.png");
 	Image topoGolpeado = new Image("/corazon.png");
 	
-	//Controladro ClICK
-	
-	boolean clickPermitido;
-	
-	
-	
-	
-	
+	//Mouse
+	Image mousePredeterminado = new Image("/Mouse_Neutral.png");
+	Image mouseClick = new Image("/Mouse_Click.png");
+
+
 	
 	public TableroJuego(int dimensiones,int size,int vertical, int horizontal) {
 		
@@ -107,6 +109,11 @@ public class TableroJuego extends Menu {
 		crearVidas();
 		// PANTALLA COMPLETA
 		window.setFullScreen(true);
+		//Definir cursor
+		
+		Cursor cursor = new ImageCursor(mousePredeterminado, mousePredeterminado.getWidth() / 2, mousePredeterminado.getHeight() / 2);
+		
+		juego.setCursor(cursor);
 
 		
 	}
@@ -185,6 +192,7 @@ public class TableroJuego extends Menu {
           //  corazones.get(vidas).setVisible(false); // ocultar la imagen de corazón correspondiente
         }
         if (vidas == 0) {
+        	window.close();
             endGame = new VentanaFin(); // salir del programa si no hay más vidas restantes
         }
     }
@@ -199,8 +207,13 @@ public class TableroJuego extends Menu {
 				clickPermitido = false;
 				System.out.println(topos[random].isVerfificarTopo());
 				if(event.getSource() == topos[random].getHueco()) {
-					//Actualizar contador
+					//Definir cursor cuando "CLICK"
 
+					cambiarCursor(event, mouseClick, mousePredeterminado);
+					/*Cursor cursorClick = new ImageCursor(mouseClick, mouseClick.getWidth() / 2, mouseClick.getHeight() / 2);
+					juego.setCursor(cursorClick);*/
+					
+					//Actualizar contador
 					incrementarContador();
 					puntuacion.setText("Puntuacion: " + obtenerContador());
 					//Crear un nuevo rectangle en donde se conoce a que rectangulo se da "click"
@@ -210,12 +223,17 @@ public class TableroJuego extends Menu {
 					// Establecer el color de relleno del Rectangle
 					topoSeleccionado.setImage(topoGolpeado);
 
+					
 					//Creando "timer" para devolver el rectangulo a su color original
 
 					Timeline timer = new Timeline(new KeyFrame(
 							Duration.seconds(0.5),	//Duracion
-							e -> topoSeleccionado.setImage(hueco)));	//Devolviendo el color al recttangulo, en este caso "BLACK"
-					
+					        e -> {
+					            topoSeleccionado.setImage(hueco);
+					           /* Cursor cursor = new ImageCursor(mousePredeterminado, mousePredeterminado.getWidth() / 2, mousePredeterminado.getHeight() / 2);
+					            juego.setCursor(cursor);*/
+					        }));
+
 					timer.play();	//Funcion para correr el timer
 					
 					
@@ -230,6 +248,18 @@ public class TableroJuego extends Menu {
 		}
 
 	};
+	
+	private void cambiarCursor(MouseEvent event, Image cursorImagen, Image cursorImagenInicial) {
+	    // cambiar el cursor al hacer clic
+	    juego.setCursor(new ImageCursor(cursorImagen, cursorImagen.getWidth() / 2, cursorImagen.getHeight() / 2));
+	    
+	    // esperar 0.5 segundos y luego cambiar el cursor de nuevo
+	    Timeline timer = new Timeline(new KeyFrame(Duration.seconds(0.25), e -> {
+	        juego.setCursor(new ImageCursor(cursorImagenInicial, cursorImagenInicial.getWidth() / 2, cursorImagenInicial.getHeight() / 2));
+	    }));
+	    timer.play();
+	}
+
 
 
 
