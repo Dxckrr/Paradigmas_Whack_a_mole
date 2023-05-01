@@ -64,37 +64,10 @@ public class Menu {
 	
 	//Nombres guardados
 	
-	String [] savedPlayers;	//= new String[modalidad2Players];
+	String savedPlayer1;	//= new String[modalidad2Players];
+	String savedPlayer2;
 	
 
-	//Dificultades
-
-	//DIMENSIONES
-	final int dimensiones1 = 4;
-	final int dimensiones2 = 6;
-	final int dimensiones3 = 8;
-	
-	//Tamaño hueco
-	
-	final int tamaño1 = 150;		//100 75 50
-	final int tamaño2 = 125;
-	final int tamaño3 = 100;
-	
-	//Distancia entre huecos
-	
-	//Vertical
-	final int distanciaVerticalFacil = 55;
-	final int distanciaVerticalMedio = 42;
-	final int distanciaVerticalDificil = 29;
-	
-	//Horizontal
-	final int distanciaHorizontalFacil = 80;
-	final int distanciaHorizontalMedio = 60;
-	final int distanciaHorizontalDificil = 40;
-	
-	
-	
-	
 	public Menu() {
 		crearseleccionModalidad();
 		//generarBotonesDificultad();
@@ -121,12 +94,11 @@ public class Menu {
 		unJugador.setOnAction(e -> {
 			
 		    generarPedirNombreUnJugador();
-		    savedPlayers = new String[1];
+		
 		});
 		dosJugadores.setOnAction(e -> {
 			
 		    generarPedirNombreDosJugadores();
-		    savedPlayers = new String[2];
 		});
 		
 		contenedorModalidades = new StackPane();
@@ -238,21 +210,15 @@ public class Menu {
 
 	private void guardarNombre(String nombrePlayer) {
 		
-
-		for(int i= 0; i< savedPlayers.length ; i++) {
-			savedPlayers[i] = nombrePlayer;
-			System.out.println(savedPlayers[i]);
-		}	
+		savedPlayer1 = nombrePlayer;
+		System.out.println(savedPlayer1);
 	}
 	private void guardarNombre(String nombrePlayer,String nombrePlayer2) {
 
-		for(int i= 0; i< savedPlayers.length ; i++) {
-			savedPlayers[i] = nombrePlayer;
-			if(i == 1) {
-				savedPlayers[i] = nombrePlayer2;
-			}
-			System.out.println(savedPlayers[i]);
-		}	
+		savedPlayer1 = nombrePlayer;
+		savedPlayer2 = nombrePlayer2;
+		System.out.println(savedPlayer1);
+		System.out.println(savedPlayer2);
 	}
 
 	
@@ -338,29 +304,19 @@ public class Menu {
 			
 			if(event.getSource()== facil) {	//&& savedPlayers.length == 2)
 				window.close();
-			/*	for(int i=0 ; i< savedPlayers.length; i++) {
-					TableroJuego juego = new TableroJuego(dimensiones1, tamaño1,distanciaVerticalFacil,distanciaHorizontalFacil,savedPlayers[0]);
-					while(!juego.isPlaying()) {
-						TableroJuego juego2 = new TableroJuego(dimensiones2, tamaño2, distanciaVerticalFacil, distanciaHorizontalFacil, savedPlayers[1]);
-					}*/
-					for(int i = 0; i< savedPlayers.length;i++) {
-						new TableroJuego(dimensiones1, tamaño1,distanciaVerticalFacil,distanciaHorizontalFacil,savedPlayers[i]);
-					}
-				}
 					
-				
+						Controller.iniciarJuego(savedPlayer1, savedPlayer2,"FACIL");
+			}
 			
 			else if(event.getSource()== medio) {
 				window.close();
-				for(int i = 0; i< savedPlayers.length;i++) {
-					new TableroJuego(dimensiones2, tamaño2,distanciaVerticalMedio,distanciaHorizontalMedio,savedPlayers[i]);
-				}
+		
+				Controller.iniciarJuego(savedPlayer1, savedPlayer2,"MEDIO");
+				
 			}
 			else if(event.getSource()== dificil) {
 				window.close();
-				for(int i = 0; i< savedPlayers.length;i++) {
-					new TableroJuego(dimensiones3, tamaño3,distanciaVerticalDificil,distanciaHorizontalDificil,savedPlayers[i]);
-				}
+				Controller.iniciarJuego(savedPlayer1, savedPlayer2,"DIFICIL");				
 			}
 
 		}

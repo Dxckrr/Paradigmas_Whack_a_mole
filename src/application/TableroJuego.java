@@ -45,6 +45,16 @@ public class TableroJuego extends Menu {
 	Scene juego;
 	VentanaFin endGame;
 	
+	//Dificultades
+	String dificultad;
+	int tamañoHueco;
+    int distanciaVertical;
+    int distanciaHorizontal;
+    int dimensiones;
+    
+	//Array "TOPOS"
+	Hole [] topos ;
+    
 	//CONTENEDORES (PANEL)
 	
 	//Panel Stack
@@ -56,17 +66,19 @@ public class TableroJuego extends Menu {
 
 	//OBJETOS / ELEMENTOS
 	
-	//Array "TOPOS"
-	Hole [] topos ;
+
 	//Array de vidas   
 	ImageView corazones[];
 	//Puntuacion
 	Label puntuacion;	//Objeto Grafico
 	
 	//Guadar Puntuacion
-	String[] puntuacionSaved;
+	String puntuacionActual;
 	//Jugador Actual
-	String [] jugadorActual;
+	Jugador jugadorActual;
+	// Jugador Siguiente
+	Jugador jugadorSiguiente;
+	
 	
 	//Temporizador
 	Label temporizador;
@@ -77,7 +89,7 @@ public class TableroJuego extends Menu {
 	//Numero de errores
 	int vidas = 3;
 	//
-    private static int contador = 0;
+    private int contador = 0;
 	//
 	private int random;
 	
@@ -93,21 +105,46 @@ public class TableroJuego extends Menu {
 	//Mouse
 	Image mousePredeterminado = new Image("/Mouse_Neutral.png");
 	Image mouseClick = new Image("/Mouse_Click.png");
-
+	
 
 	
-	public TableroJuego(int dimensiones,int size,int vertical, int horizontal,String savedPlayer) {
+	public TableroJuego(String dificultad,Jugador jugadorActual,Jugador jugadorSiguiente) {
+		if(jugadorSiguiente ==null) {
+   		 	endGame = new VentanaFin(jugadorSiguiente,puntuacionActual,dificultad);          
+
+		}
+		this.jugadorSiguiente = jugadorSiguiente;
+		this.dificultad = dificultad;
+		this.jugadorActual = jugadorActual;
+		jugadorActual.setPuntuacion(contador);
+        switch (dificultad) {
+        case "FACIL":
+            tamañoHueco = 150;
+            distanciaVertical = 55;
+            distanciaHorizontal = 80;
+            dimensiones = 4;
+            break;
+        case "MEDIO":
+            tamañoHueco = 125;
+            distanciaVertical = 42;
+            distanciaHorizontal = 60;
+            dimensiones = 6;
+            break;
+        case "DIFICIL":
+            tamañoHueco = 100;
+            distanciaVertical = 29;
+            distanciaHorizontal = 40;
+            dimensiones = 8;
+            break;
+            
+        default:
+            break;
+        }
 		
 		jugando = true;
 		//Definir Cantidad topos
 		
 		topos = new Hole[dimensiones * dimensiones];
-		
-		//Definir cantidad jugadores | Puntuaciones
-		
-		jugadorActual = savedPlayers;
-		puntuacionSaved = new String[2];
-		
 		
 		//Inicializar contenedor elementos
 		
@@ -115,7 +152,7 @@ public class TableroJuego extends Menu {
 		cuadricula = new GridPane();
 		
 		// Crear tablero o cuadricula
-		crearCuadricula(dimensiones, size, vertical, horizontal);
+		crearCuadricula(dimensiones, tamañoHueco, distanciaVertical, distanciaHorizontal);
 		
 		// Crear contador de tiempo transcurrido
 		crearContadorTiempoJuego();
@@ -140,7 +177,6 @@ public class TableroJuego extends Menu {
 
 		
 	}
-
 
 	
 	private void crearCuadricula(int dimensiones, int size,int vertical, int horizontal ) {
@@ -218,8 +254,14 @@ public class TableroJuego extends Menu {
         }
         if (vidas == 0) {
         	window.close();
-        	jugando = false;
-            endGame = new VentanaFin(savedPlayers,puntuacionSaved); // salir del programa si no hay más vidas restantes
+          	if(jugadorSiguiente.getNombre()!=null) {
+            	jugando = false;
+
+        		Controller.terminarJuego(jugando,jugadorSiguiente,dificultad);
+        	}
+        	else {
+        		 endGame = new VentanaFin(jugadorSiguiente,puntuacionActual,dificultad);          
+        		 }
         }
     }
 	
@@ -241,6 +283,7 @@ public class TableroJuego extends Menu {
 					//Actualizar contador
 					incrementarContador();
 					puntuacion.setText("Puntuacion: " + obtenerContador());
+					
 					//Crear un nuevo rectangle en donde se conoce a que rectangulo se da "click"
 
 					ImageView topoSeleccionado = (ImageView) event.getSource();
@@ -273,12 +316,23 @@ public class TableroJuego extends Menu {
 		}
 
 	};
-	
+	//-----------------------------------------------------
+
+    public void incrementarContador() {
+        contador++;
+        jugadorActual.setPuntuacion(contador);
+    }
+
+    public int obtenerContador() {
+        return contador;
+    }
+    //------------------------------------------------------
+    
 	private void cambiarCursor(MouseEvent event, Image cursorImagen, Image cursorImagenInicial) {
 	    // cambiar el cursor al hacer clic
 	    juego.setCursor(new ImageCursor(cursorImagen, cursorImagen.getWidth() / 2, cursorImagen.getHeight() / 2));
 	    
-	    // esperar 0.5 segundos y luego cambiar el cursor de nuevo
+	    // esperar 0.25 segundos y luego cambiar el cursor de nuevo
 	    Timeline timer = new Timeline(new KeyFrame(Duration.seconds(0.25), e -> {
 	        juego.setCursor(new ImageCursor(cursorImagenInicial, cursorImagenInicial.getWidth() / 2, cursorImagenInicial.getHeight() / 2));
 	    }));
@@ -344,24 +398,22 @@ public class TableroJuego extends Menu {
                     if (countdown.get() == 0) {
                         timeline.stop(); // Detiene la línea de tiempo = "temporizador"  cuando el contador llega a 0
                         window.close();
-                        jugando = false;
-                        endGame = new VentanaFin(savedPlayers,puntuacionSaved);
+                        
+                    	if(jugadorSiguiente.getNombre()!=null) {
+                        	jugando = false;
+
+                    		Controller.terminarJuego(jugando,jugadorSiguiente,dificultad);
+                    	}
+                    	else {
+                    		 endGame = new VentanaFin(jugadorSiguiente,puntuacionActual,dificultad);          
+                    		 }
+                     	
+                        
                     }
                 }));
         timeline.play(); // Inicia la línea de tiempo
 	}
 
-
-	//-----------------------------------------------------
-
-    public static void incrementarContador() {
-        contador++;
-    }
-
-    public static int obtenerContador() {
-        return contador;
-    }
-    //------------------------------------------------------
 	/*private  Rectangle getRandom(Hole[] rectangles) {
 		Random topoRandom = new Random();
 		
