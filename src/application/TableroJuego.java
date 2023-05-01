@@ -13,6 +13,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Cursor;
 import javafx.scene.ImageCursor;
 import javafx.scene.Parent;
@@ -24,6 +25,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -33,6 +38,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.Screen;
 import javafx.util.Duration;
 import javafx.scene.paint.Color;
 import java.util.random.*;
@@ -79,11 +85,15 @@ public class TableroJuego extends Menu {
 	// Jugador Siguiente
 	Jugador jugadorSiguiente;
 	
+	//ELEMENTOS GRAFICOS
 	
+	//nombre
+	Label jugadorActualEnPantalla;
 	//Temporizador
 	Label temporizador;
 	//Boton para comenzar
 	Button botonStart;
+	
 	
 	//VARIABLES DEFINIDAS
 	//Numero de errores
@@ -108,11 +118,12 @@ public class TableroJuego extends Menu {
 	
 
 	
-	public TableroJuego(String dificultad,Jugador jugadorActual,Jugador jugadorSiguiente) {
-		if(jugadorSiguiente ==null) {
+	public TableroJuego(String dificultad,Jugador jugadorActual,Jugador jugadorSiguiente, boolean jugando) {
+	/*	if(jugadorSiguiente.getNombre() ==null) {
    		 	endGame = new VentanaFin(jugadorSiguiente,puntuacionActual,dificultad);          
 
-		}
+		}*/
+		this.jugando = jugando;
 		this.jugadorSiguiente = jugadorSiguiente;
 		this.dificultad = dificultad;
 		this.jugadorActual = jugadorActual;
@@ -140,8 +151,7 @@ public class TableroJuego extends Menu {
         default:
             break;
         }
-		
-		jugando = true;
+	
 		//Definir Cantidad topos
 		
 		topos = new Hole[dimensiones * dimensiones];
@@ -165,7 +175,10 @@ public class TableroJuego extends Menu {
 		
 		//
 		crearVidas();
-
+		//
+		crearTextoJugadorActual();
+		//
+		crearFondo();
 		// PANTALLA COMPLETA
 		window.setFullScreen(true);
 		
@@ -178,7 +191,7 @@ public class TableroJuego extends Menu {
 		
 	}
 
-	
+
 	private void crearCuadricula(int dimensiones, int size,int vertical, int horizontal ) {
 		//Crear la cuadricula (GridPane)
 		
@@ -220,6 +233,26 @@ public class TableroJuego extends Menu {
 		window.setScene(juego);
 		
 		
+		
+	}
+	
+	private void crearTextoJugadorActual() {
+		jugadorActualEnPantalla= new Label("Jugador: "+jugadorActual.getNombre());
+		jugadorActualEnPantalla.setFont(new Font("Verdana",(20)));
+		jugadorActualEnPantalla.setTextFill(Color.WHITE);
+		contendorPrincipal.getChildren().add(jugadorActualEnPantalla);
+		contendorPrincipal.setAlignment(jugadorActualEnPantalla, Pos.TOP_CENTER);
+	}
+	private void crearFondo() {
+		ImageView fondo = new ImageView("/Fondo_TableroJuego.png");
+		
+		//Ajustar imagen a resolucion
+		fondo.fitWidthProperty().bind(contendorPrincipal.widthProperty());
+		fondo.fitHeightProperty().bind(contendorPrincipal.heightProperty());
+
+		contendorPrincipal.getChildren().add(fondo);
+
+		fondo.toBack();	 // .toBack mande la imagen atras
 	}
 	
 	private void crearVidas() {
@@ -254,13 +287,20 @@ public class TableroJuego extends Menu {
         }
         if (vidas == 0) {
         	window.close();
-          	if(jugadorSiguiente.getNombre()!=null) {
+          	if(jugando) {
             	jugando = false;
+        		Controller.terminarJuego(jugando,jugadorSiguiente,dificultad,jugando);
+       		 ArchivoXML.crearXml(dificultad, jugadorActual.getNombre(), jugadorActual.getPuntuacion());
 
-        		Controller.terminarJuego(jugando,jugadorSiguiente,dificultad);
+
+
         	}
         	else {
-        		 endGame = new VentanaFin(jugadorSiguiente,puntuacionActual,dificultad);          
+          		 endGame = new VentanaFin(jugadorSiguiente,puntuacionActual,dificultad);
+         		 ArchivoXML.crearXml(dificultad, jugadorActual.getNombre(), jugadorActual.getPuntuacion());
+
+        
+
         		 }
         }
     }
@@ -399,13 +439,18 @@ public class TableroJuego extends Menu {
                         timeline.stop(); // Detiene la línea de tiempo = "temporizador"  cuando el contador llega a 0
                         window.close();
                         
-                    	if(jugadorSiguiente.getNombre()!=null) {
+                      	if(jugando) {
                         	jugando = false;
+                    		Controller.terminarJuego(jugando,jugadorSiguiente,dificultad,jugando);
+                   		 ArchivoXML.crearXml(dificultad, jugadorActual.getNombre(), jugadorActual.getPuntuacion());
 
-                    		Controller.terminarJuego(jugando,jugadorSiguiente,dificultad);
+
+
                     	}
                     	else {
-                    		 endGame = new VentanaFin(jugadorSiguiente,puntuacionActual,dificultad);          
+                      		 endGame = new VentanaFin(jugadorSiguiente,puntuacionActual,dificultad);
+                     		 ArchivoXML.crearXml(dificultad, jugadorActual.getNombre(), jugadorActual.getPuntuacion());
+
                     		 }
                      	
                         

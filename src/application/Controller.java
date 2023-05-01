@@ -21,21 +21,26 @@ public class Controller {
 	public static boolean iniciarJuego(String  nombreJugador1,String nombreJugador2,String dificultad) {
 		Jugador jugadorActual = new Jugador(nombreJugador1);
 		Jugador jugadorSiguiente = new Jugador(nombreJugador2);
+		if(nombreJugador2 == null) {
+			TableroJuego juego= new TableroJuego(dificultad,jugadorActual,jugadorSiguiente,false);
+		}
+		else {
+			TableroJuego juego= new TableroJuego(dificultad,jugadorActual,jugadorSiguiente,true);
 
-		TableroJuego juego= new TableroJuego(dificultad, jugadorActual,jugadorSiguiente);
+		}
+
 		
-
+		
 
 		return true;
 		
 	}
 	
-	public static void terminarJuego(boolean isJugando, Jugador JugadorSiguiente, String dificultad) {
+	public static void terminarJuego(boolean isJugando, Jugador JugadorSiguiente, String dificultad,boolean jugando) {
 		
 		
 		if(!isJugando) {
-			TableroJuego juego= new TableroJuego(dificultad, JugadorSiguiente,null);	
-			}
+			TableroJuego juego= new TableroJuego(dificultad, JugadorSiguiente,null,jugando);		}
 	
 	
 	}
