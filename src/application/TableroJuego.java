@@ -239,7 +239,7 @@ public class TableroJuego extends Menu {
 	private void crearTextoJugadorActual() {
 		jugadorActualEnPantalla= new Label("Jugador: "+jugadorActual.getNombre());
 		jugadorActualEnPantalla.setFont(new Font("Verdana",(20)));
-		jugadorActualEnPantalla.setTextFill(Color.WHITE);
+		//jugadorActualEnPantalla.setTextFill(Color.WHITE);
 		contendorPrincipal.getChildren().add(jugadorActualEnPantalla);
 		contendorPrincipal.setAlignment(jugadorActualEnPantalla, Pos.TOP_CENTER);
 	}
@@ -288,16 +288,17 @@ public class TableroJuego extends Menu {
         if (vidas == 0) {
         	window.close();
           	if(jugando) {
-            	jugando = false;
-        		Controller.terminarJuego(jugando,jugadorSiguiente,dificultad,jugando);
-       		 ArchivoXML.crearXml(dificultad, jugadorActual.getNombre(), jugadorActual.getPuntuacion());
+          		jugando=false;
+        		Controller.terminarJuego(jugando,jugadorSiguiente,dificultad);
+        		ArchivoXML.crearXml(dificultad, jugadorActual.getNombre(), jugadorActual.getPuntuacion());
 
 
 
         	}
         	else {
-          		 endGame = new VentanaFin(jugadorSiguiente,puntuacionActual,dificultad);
          		 ArchivoXML.crearXml(dificultad, jugadorActual.getNombre(), jugadorActual.getPuntuacion());
+          		 endGame = new VentanaFin(jugadorSiguiente,puntuacionActual,dificultad);
+
 
         
 
@@ -426,7 +427,7 @@ public class TableroJuego extends Menu {
 		//final = no modificable
 		final IntegerProperty countdown;
 		
-    	countdown = new SimpleIntegerProperty(40); // Inicializa el contador en 60 segundos || IntergerProperty, para mostrar en UI
+    	countdown = new SimpleIntegerProperty(30); // Inicializa el contador en 60 segundos || IntergerProperty, para mostrar en UI
     	// Crea una línea de tiempo que actualiza el contador cada segundo
         Timeline timeline = new Timeline();
         timeline.setCycleCount(Animation.INDEFINITE); // Repite indefinidamente
@@ -440,16 +441,20 @@ public class TableroJuego extends Menu {
                         window.close();
                         
                       	if(jugando) {
-                        	jugando = false;
-                    		Controller.terminarJuego(jugando,jugadorSiguiente,dificultad,jugando);
-                   		 ArchivoXML.crearXml(dificultad, jugadorActual.getNombre(), jugadorActual.getPuntuacion());
+                      		jugando = false;
+                    		Controller.terminarJuego(jugando,jugadorSiguiente,dificultad);
+                    		ArchivoXML.crearXml(dificultad, jugadorActual.getNombre(), jugadorActual.getPuntuacion());
 
 
 
                     	}
                     	else {
+                      		 ArchivoXML.crearXml(dificultad, jugadorActual.getNombre(), jugadorActual.getPuntuacion());
+                      		 if(countdown.get()!= 0) {
+                      			 
+                      		 }
                       		 endGame = new VentanaFin(jugadorSiguiente,puntuacionActual,dificultad);
-                     		 ArchivoXML.crearXml(dificultad, jugadorActual.getNombre(), jugadorActual.getPuntuacion());
+
 
                     		 }
                      	

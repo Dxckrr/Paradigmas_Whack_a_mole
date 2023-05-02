@@ -1,94 +1,77 @@
 package application;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.TransformerFactoryConfigurationError;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
-import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
 
 public class ArchivoXML {
-	
-	public ArchivoXML() {
-		
-	}
-	
-	public static void crearXml(String dificultad, String inUsuario, int inPuntaje) {
-		String textoAGuardar = inUsuario + " " + inPuntaje + "/";
-		
-		try {
-			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder builder = factory.newDocumentBuilder();
-			DOMImplementation implementation = builder.getDOMImplementation();
-		
-			Document documento = implementation.createDocument(null, "HighScores", null);
-			documento.setXmlVersion("1.0");
-			
-			Element dificultades = documento.createElement("Dificultades");
-			Element facil = documento.createElement("facil");
-			Element medio = documento.createElement("Medio");
-			Element dificil = documento.createElement("Dificil");
-			
-			dificultades.appendChild(facil);
-			dificultades.appendChild(medio);
-			dificultades.appendChild(dificil);
-			
-			Element usuariosFacil = documento.createElement("Usuarios");
-			Element usuariosMedio = documento.createElement("Usuarios");
-			Element usuariosDificil = documento.createElement("Usuarios");
-			
-			facil.appendChild(usuariosFacil);
-			medio.appendChild(usuariosMedio);
-			dificil.appendChild(usuariosDificil);
-			
-			switch (dificultad) {
-			case "FACIL":
-				Text textoFacil = documento.createTextNode(textoAGuardar);
-				facil.appendChild(textoFacil);
-				break;
-			
-			case "MEDIO":
-				Text textoMedio = documento.createTextNode(textoAGuardar);
-				medio.appendChild(textoMedio);
-				break;
-				
-			case "DIFICIL":
-				Text textoDificil = documento.createTextNode(textoAGuardar);
-				dificil.appendChild(textoDificil);
-				
-				break;
-			default:
-				break;
-			}
-			
-			documento.getDocumentElement().appendChild(dificultades);
-			
-			Source source = new DOMSource(documento);
-			Result result = new StreamResult(new File("HighScores.xml"));
-			
-			Transformer transformer = TransformerFactory.newInstance().newTransformer();
-			transformer.transform(source, result);
-			
-			
-		} catch (ParserConfigurationException | TransformerFactoryConfigurationError | TransformerException e) {
-			System.out.println(e.getMessage());
-		}
-	}
 
-		 
+    private static final String XML_FILE_PATH = "archivo.xml";
 
-		
-	}
+    public static void crearXml(String dificultad, String inUsuario, int inPuntaje) {
+
+        String texto = inUsuario + " " + inPuntaje; 
+
+        try {
+            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+
+            Document doc;
+            Element rootElement;
+
+            File file = new File(XML_FILE_PATH);
+            if (file.exists()) {
+                // Si el archivo XML ya existe, cargar el documento existente
+                doc = docBuilder.parse(file);
+                rootElement = doc.getDocumentElement();
+            } else {
+                // Si el archivo XML no existe, crear un nuevo documento y un elemento raíz
+                doc = docBuilder.newDocument();
+                rootElement = doc.createElement("scores");
+                doc.appendChild(rootElement);
+            }
+            
+            // Crear un nuevo elemento con el texto proporcionado
+            Element nuevoElemento = doc.createElement("score");
+            nuevoElemento.setAttribute("difficulty", dificultad);
+            Text nuevoTexto = doc.createTextNode(texto);
+            nuevoElemento.appendChild(nuevoTexto);
+            rootElement.appendChild(nuevoElemento);
+
+            // Guardar los cambios en el archivo XML
+            FileWriter writer = new FileWriter(file);
+            writer.write(docToString(doc));
+            writer.close();
+
+            System.out.println("Elemento agregado al archivo XML exitosamente.");
+
+        } catch (ParserConfigurationException | IOException | org.xml.sax.SAXException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Método para convertir un Document a String
+    private static String docToString(Document doc) {
+        try {
+            javax.xml.transform.TransformerFactory tf = javax.xml.transform.TransformerFactory.newInstance();
+            javax.xml.transform.Transformer transformer = tf.newTransformer();
+            transformer.setOutputProperty(javax.xml.transform.OutputKeys.OMIT_XML_DECLARATION, "yes");
+            java.io.StringWriter writer = new java.io.StringWriter();
+            transformer.transform(new javax.xml.transform.dom.DOMSource(doc), new javax.xml.transform.stream.StreamResult(writer));
+            return writer.getBuffer().toString();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+}
+
 

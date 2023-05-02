@@ -36,11 +36,11 @@ public class Controller {
 		
 	}
 	
-	public static void terminarJuego(boolean isJugando, Jugador JugadorSiguiente, String dificultad,boolean jugando) {
+	public static void terminarJuego(boolean isJugando, Jugador JugadorSiguiente, String dificultad) {
 		
 		
 		if(!isJugando) {
-			TableroJuego juego= new TableroJuego(dificultad, JugadorSiguiente,null,jugando);		}
+			TableroJuego juego= new TableroJuego(dificultad, JugadorSiguiente,null,false);		}
 	
 	
 	}
