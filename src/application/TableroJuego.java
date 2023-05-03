@@ -103,11 +103,9 @@ public class TableroJuego extends Menu {
 	//
 	private int random;
 	
-	//
-	boolean jugando;
 	//Controladro ClICK
 	boolean clickPermitido;
-	
+	boolean modoDosJugadores;
 	//IMAGENES
 	Image hueco = new Image("/Hueco.png");
 	Image topoFuera = new Image("/Hueco_TopoFuera.png");
@@ -118,15 +116,16 @@ public class TableroJuego extends Menu {
 	
 
 	
-	public TableroJuego(String dificultad,Jugador jugadorActual,Jugador jugadorSiguiente, boolean jugando) {
+	public TableroJuego(String dificultad,Jugador jugadorActual,Jugador jugadorSiguiente,boolean modoDosJugadores) {
 	/*	if(jugadorSiguiente.getNombre() ==null) {
    		 	endGame = new VentanaFin(jugadorSiguiente,puntuacionActual,dificultad);          
 
 		}*/
-		this.jugando = jugando;
+		this.modoDosJugadores = modoDosJugadores;
 		this.jugadorSiguiente = jugadorSiguiente;
 		this.dificultad = dificultad;
 		this.jugadorActual = jugadorActual;
+
 		jugadorActual.setPuntuacion(contador);
         switch (dificultad) {
         case "FACIL":
@@ -159,6 +158,8 @@ public class TableroJuego extends Menu {
 		//Inicializar contenedor elementos
 		
 		contendorPrincipal = new StackPane();
+		contendorPrincipal.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+
 		cuadricula = new GridPane();
 		
 		// Crear tablero o cuadricula
@@ -188,7 +189,7 @@ public class TableroJuego extends Menu {
 
 		juego.setCursor(cursor);
 
-		
+
 	}
 
 
@@ -286,23 +287,30 @@ public class TableroJuego extends Menu {
           //  corazones.get(vidas).setVisible(false); // ocultar la imagen de corazón correspondiente
         }
         if (vidas == 0) {
+        	
         	window.close();
-          	if(jugando) {
-          		jugando=false;
-        		Controller.terminarJuego(jugando,jugadorSiguiente,dificultad);
-        		ArchivoXML.crearXml(dificultad, jugadorActual.getNombre(), jugadorActual.getPuntuacion());
+
+        	
+          	if(jugadorSiguiente!= null && (modoDosJugadores)) {
+          		
+            	window.close();
+            	
+            	ArchivoXML.crearXml(dificultad, jugadorActual.getNombre(), jugadorActual.getPuntuacion());
+            	Controller.continuarJuego(jugadorSiguiente, dificultad);
+            	Controller.crearFinal(jugadorActual,dificultad);
+       		 
 
 
 
         	}
         	else {
-         		 ArchivoXML.crearXml(dificultad, jugadorActual.getNombre(), jugadorActual.getPuntuacion());
-          		 endGame = new VentanaFin(jugadorSiguiente,puntuacionActual,dificultad);
-
-
-        
-
-        		 }
+            	window.close();
+        		ArchivoXML.crearXml(dificultad, jugadorActual.getNombre(), jugadorActual.getPuntuacion());
+        		Controller.crearFinal(jugadorActual,dificultad);
+         		Controller.finalizarJuego(dificultad);
+            	
+         		 
+        	}
         }
     }
 	
@@ -408,7 +416,6 @@ public class TableroJuego extends Menu {
 	}
 	
 	private void crearBotonInicioPartida() {
-		
 		botonStart = new Button("Iniciar!");
 		botonStart.setFont(new Font("Verdana",30));
 		
@@ -427,7 +434,7 @@ public class TableroJuego extends Menu {
 		//final = no modificable
 		final IntegerProperty countdown;
 		
-    	countdown = new SimpleIntegerProperty(30); // Inicializa el contador en 60 segundos || IntergerProperty, para mostrar en UI
+    	countdown = new SimpleIntegerProperty(15); // Inicializa el contador en 60 segundos || IntergerProperty, para mostrar en UI
     	// Crea una línea de tiempo que actualiza el contador cada segundo
         Timeline timeline = new Timeline();
         timeline.setCycleCount(Animation.INDEFINITE); // Repite indefinidamente
@@ -438,25 +445,28 @@ public class TableroJuego extends Menu {
             	
                     if (countdown.get() == 0) {
                         timeline.stop(); // Detiene la línea de tiempo = "temporizador"  cuando el contador llega a 0
-                        window.close();
+                       // window.close();
                         
-                      	if(jugando) {
-                      		jugando = false;
-                    		Controller.terminarJuego(jugando,jugadorSiguiente,dificultad);
-                    		ArchivoXML.crearXml(dificultad, jugadorActual.getNombre(), jugadorActual.getPuntuacion());
+                      	if(jugadorSiguiente!= null && (modoDosJugadores)) {
+                      		
+                        	window.close();
+                        	
+                        	ArchivoXML.crearXml(dificultad, jugadorActual.getNombre(), jugadorActual.getPuntuacion());
+                        	Controller.continuarJuego(jugadorSiguiente, dificultad);
+                        	Controller.crearFinal(jugadorActual,dificultad);
+                   		 
 
 
 
                     	}
                     	else {
-                      		 ArchivoXML.crearXml(dificultad, jugadorActual.getNombre(), jugadorActual.getPuntuacion());
-                      		 if(countdown.get()!= 0) {
-                      			 
-                      		 }
-                      		 endGame = new VentanaFin(jugadorSiguiente,puntuacionActual,dificultad);
-
-
-                    		 }
+                        	window.close();
+                    		ArchivoXML.crearXml(dificultad, jugadorActual.getNombre(), jugadorActual.getPuntuacion());
+                    		Controller.crearFinal(jugadorActual,dificultad);
+                     		Controller.finalizarJuego(dificultad);
+                        	
+                     		 
+                    	}
                      	
                         
                     }
@@ -464,14 +474,6 @@ public class TableroJuego extends Menu {
         timeline.play(); // Inicia la línea de tiempo
 	}
 
-	/*private  Rectangle getRandom(Hole[] rectangles) {
-		Random topoRandom = new Random();
-		
-		int randomIndex = topoRandom.nextInt(rectangles.length);
-		Rectangle randomRectangle = rectangles[randomIndex].getHueco();
-		
-		return randomRectangle;
-	} */
 	
 	private int getRandom(Hole[] rectangles) {
 		Random topoRandom = new Random();

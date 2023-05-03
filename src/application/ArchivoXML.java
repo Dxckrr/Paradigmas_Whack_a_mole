@@ -14,7 +14,7 @@ import org.w3c.dom.Text;
 
 public class ArchivoXML {
 
-    private static final String XML_FILE_PATH = "archivo.xml";
+    private static final String XML_FILE_PATH = "archivoScores.xml";
 
     public static void crearXml(String dificultad, String inUsuario, int inPuntaje) {
 

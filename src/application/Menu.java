@@ -32,7 +32,8 @@ public class Menu {
 	Scene modalidadJugadores, seleccionDificultades, introducirNombres;
 	
 	//Panel
-	StackPane contenedorModalidades;
+	StackPane contenedorPrincipalModalidades;
+	VBox contenedorModalidades;
 	StackPane contenedorObtenerNombre;
 	StackPane contenedorMenu;
 	GridPane contenedorModalidad2Jugadores;
@@ -54,6 +55,9 @@ public class Menu {
 	Label escribirNombre;
 	Label escribirNombrePlayer1;
 	Label escribirNombrePlayer2;
+	
+	Label selecion;
+	Label welcome;
 
 	//Cuadros de texto
 	
@@ -79,6 +83,7 @@ public class Menu {
 	
 	private void crearseleccionModalidad() {
 		window = new Stage();
+		window.setFullScreen(true);
 		
 		Text welcome = new Text("Seleccione una modalidad!");
 		welcome.setFont(new Font(50));
@@ -100,19 +105,34 @@ public class Menu {
 			
 		    generarPedirNombreDosJugadores();
 		});
+		contenedorModalidades = new VBox();
+		contenedorModalidades.setSpacing(100);	//Espacio entre botones
+		contenedorModalidades.setAlignment(Pos.CENTER_RIGHT);
+	
+		contenedorModalidades.getChildren().addAll(unJugador,dosJugadores);
+		contenedorPrincipalModalidades = new StackPane();
 		
-		contenedorModalidades = new StackPane();
+		//FONDO
+		ImageView fondo = new ImageView("/fondoPobre.png");
 		
-		contenedorModalidades.setAlignment(unJugador, Pos.BOTTOM_CENTER);
-		contenedorModalidades.setAlignment(dosJugadores, Pos.TOP_CENTER);
+		//Ajustar imagen a resolucion
+		fondo.fitWidthProperty().bind(contenedorPrincipalModalidades.widthProperty());
+		fondo.fitHeightProperty().bind(contenedorPrincipalModalidades.heightProperty());
+
+		contenedorPrincipalModalidades.getChildren().add(fondo);
+
+		fondo.toBack();	 // .toBack mande la imagen atras
 		
-		contenedorModalidades.setMargin(unJugador, new Insets(50));
-		contenedorModalidades.setMargin(dosJugadores, new Insets(50));
+		contenedorPrincipalModalidades.getChildren().add(welcome);
+		contenedorPrincipalModalidades.setAlignment(welcome, Pos.TOP_CENTER);
+		
+		
+		
+		contenedorPrincipalModalidades.getChildren().add(contenedorModalidades);
+		contenedorPrincipalModalidades.setMargin(contenedorModalidades, new Insets(0,200,0, 0)); // establecer un margen (ABAJO,IZQUIERDA,ARRIBA,DERECHA)
 
 		
-		contenedorModalidades.getChildren().addAll(unJugador,dosJugadores);
-		
-		modalidadJugadores = new Scene(contenedorModalidades,480,240);
+		modalidadJugadores = new Scene(contenedorPrincipalModalidades,480,240);
 		modalidadJugadores.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 		
 		window.setScene(modalidadJugadores);
@@ -212,6 +232,8 @@ public class Menu {
 		
 		savedPlayer1 = nombrePlayer;
 		System.out.println(savedPlayer1);
+		System.out.println(savedPlayer2);
+
 	}
 	private void guardarNombre(String nombrePlayer,String nombrePlayer2) {
 
@@ -227,12 +249,12 @@ public class Menu {
 	//	window = new Stage();
 	//	window.setFullScreen(true);
 	//	window.setResizable(true);
-		Text welcome = new Text("Bienvenido(s) "+player+player2+"!");
+		 welcome = new Label("Bienvenido(s) "+player+player2+"!");
 		welcome.setFont(new Font(50));
 		//welcome.setStyle("-fx-font-family: 'MiFuentePersonalizada'; -fx-font-size: 50px; -fx-font-weight: bold; -fx-fill: #333333;");
 
 		
-		Text selecion = new Text("Seleccione una dificultad!");
+		selecion = new Label("Seleccione una dificultad!");
 		selecion.setFont(new Font(30));
 
 
@@ -304,7 +326,6 @@ public class Menu {
 			
 			if(event.getSource()== facil) {	//&& savedPlayers.length == 2)
 				window.close();
-					
 						Controller.iniciarJuego(savedPlayer1, savedPlayer2,"FACIL");
 			}
 			
