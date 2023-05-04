@@ -48,7 +48,7 @@ public class ArchivoXML {
 
             // Guardar los cambios en el archivo XML
             FileWriter writer = new FileWriter(file);
-            writer.write(docToString(doc));
+            writer.write(documentToString(doc));
             writer.close();
 
             System.out.println("Elemento agregado al archivo XML exitosamente.");
@@ -59,7 +59,7 @@ public class ArchivoXML {
     }
 
     // Método para convertir un Document a String
-    private static String docToString(Document doc) {
+    private static String documentToString(Document doc) {
         try {
             javax.xml.transform.TransformerFactory tf = javax.xml.transform.TransformerFactory.newInstance();
             javax.xml.transform.Transformer transformer = tf.newTransformer();

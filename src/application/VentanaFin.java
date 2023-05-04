@@ -5,18 +5,26 @@ import java.util.ArrayList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 public class VentanaFin {
-	Stage window; 
-	Scene finallll;
-	Label finaly;
-	StackPane fin;
-	Button siguiente ;
+
+	Stage ventana;
+	Scene escena;
+	
+	VBox contenedor;
+	
+	Label titulo;
+	Label puntaje;
+	
+	Rectangle rectanguloBlanco;
+	StackPane contenedorPrincipal;
 	
 	public VentanaFin(ArrayList<Jugador> inJugadores,String dificultad) {
 		crearFinalDosJugadores(inJugadores,dificultad);
@@ -27,53 +35,92 @@ public class VentanaFin {
 	}
 	
 	private void crearFinalUnoJugador(Jugador jugador,String dificultad) {
-		Stage ventana = new Stage();
-        VBox contenedor = new VBox(10);
+		contenedorPrincipal = new StackPane();
+		ventana = new Stage();
+        contenedor = new VBox(10);
         contenedor.setPadding(new Insets(20));
         contenedor.setAlignment(Pos.CENTER);
         
+        rectanguloBlanco = new Rectangle();
+        rectanguloBlanco.setWidth(720);
+        rectanguloBlanco.setHeight(480);
+        rectanguloBlanco.setFill(Color.WHITE);
+        contenedorPrincipal.getChildren().add(rectanguloBlanco);
+
+
         // Encabezado de la ventana
-        Label titulo = new Label("Resultados finales - " + dificultad);
-        titulo.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
+        titulo = new Label("Resultados finales - " + dificultad);
+        titulo.setStyle("-fx-font-size: 40px; -fx-font-weight: bold;");
         contenedor.getChildren().add(titulo);
         
-        Label puntaje = new Label("El jugador " + jugador.getNombre() + " ha obtenido un puntaje de: " + jugador.getPuntuacion());
-        puntaje.setStyle("-fx-font-size: 16px;");
+        puntaje = new Label("El jugador " + jugador.getNombre() + " ha obtenido un puntaje de: " + jugador.getPuntuacion());
+        puntaje.setStyle("-fx-font-size: 34px;");
         contenedor.getChildren().add(puntaje);
+        contenedorPrincipal.getChildren().add(contenedor);
+        
+		ImageView fondo = new ImageView("/FondoFinal.png");
+		
+		//Ajustar imagen a resolucion
+		fondo.fitWidthProperty().bind(contenedorPrincipal.widthProperty());
+		fondo.fitHeightProperty().bind(contenedorPrincipal.heightProperty());
+
+		contenedorPrincipal.getChildren().add(fondo);
+
+		fondo.toBack();	 // .toBack mande la imagen atras
         
         
-        Scene escena = new Scene(contenedor);
+        escena = new Scene(contenedorPrincipal,1920,1080);
         ventana.setScene(escena);
         ventana.show();
+        
+       // Platform.exit();	//Para cerrar ..despues de 5 segs pato futuro
 	}
 	
 	private void crearFinalDosJugadores(ArrayList<Jugador> inJugadores,String dificultad) {
-		Stage ventana = new Stage();
-        VBox contenedor = new VBox(10);
+		contenedorPrincipal = new StackPane();
+		ventana = new Stage();
+        contenedor = new VBox(10);
         contenedor.setPadding(new Insets(20));
         contenedor.setAlignment(Pos.CENTER);
         
+        
+        rectanguloBlanco = new Rectangle();
+        rectanguloBlanco.setWidth(720);
+        rectanguloBlanco.setHeight(480);
+        rectanguloBlanco.setFill(Color.WHITE);
+        contenedorPrincipal.getChildren().add(rectanguloBlanco);
+        
         // Encabezado de la ventana
-        Label titulo = new Label("Resultados finales - " + dificultad);
+        titulo = new Label("Resultados finales - " + dificultad);
         titulo.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
         contenedor.getChildren().add(titulo);
         
             for (Jugador jugador : inJugadores) {
                 Label puntaje = new Label("El jugador " + jugador.getNombre() + " ha obtenido un puntaje de: " + jugador.getPuntuacion());
-                puntaje.setStyle("-fx-font-size: 16px;");
+                puntaje.setStyle("-fx-font-size: 30px;");
                 contenedor.getChildren().add(puntaje);
             }
             
             // Texto del ganador
             Jugador ganador = encontrarGanador(inJugadores);
             Label resultadoFinal = new Label("El ganador fue: " + ganador.getNombre() + " con un puntaje de " + ganador.getPuntuacion());
-            resultadoFinal.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
+            resultadoFinal.setStyle("-fx-font-size: 32px; -fx-font-weight: bold;");
             contenedor.getChildren().add(resultadoFinal);
         
-        // Texto para cada jugador
+    		contenedorPrincipal.getChildren().add(contenedor);
+
+    		ImageView fondo = new ImageView("/FondoFinal.png");
+    		
+    		//Ajustar imagen a resolucion
+    		fondo.fitWidthProperty().bind(contenedorPrincipal.widthProperty());
+    		fondo.fitHeightProperty().bind(contenedorPrincipal.heightProperty());
+
+    		contenedorPrincipal.getChildren().add(fondo);
+
+    		fondo.toBack();	 // .toBack mande la imagen atras
 
         
-        Scene escena = new Scene(contenedor);
+        escena = new Scene(contenedorPrincipal,1920,1080);
         ventana.setScene(escena);
         ventana.show();
     }

@@ -99,10 +99,11 @@ public class TableroJuego extends Menu {
 	//Numero de errores
 	int vidas = 3;
 	//
-    private int contador = 0;
+	private int contador = 0;
 	//
 	private int random;
 	
+	//private int limite; 
 	//Controladro ClICK
 	boolean clickPermitido;
 	boolean modoDosJugadores;
@@ -230,7 +231,7 @@ public class TableroJuego extends Menu {
 		
 
 		
-		juego = new Scene(contendorPrincipal,1080,720);
+		juego = new Scene(contendorPrincipal,1920,1080);
 		window.setScene(juego);
 		
 		
@@ -239,7 +240,7 @@ public class TableroJuego extends Menu {
 	
 	private void crearTextoJugadorActual() {
 		jugadorActualEnPantalla= new Label("Jugador: "+jugadorActual.getNombre());
-		jugadorActualEnPantalla.setFont(new Font("Verdana",(20)));
+		jugadorActualEnPantalla.setFont(new Font("Verdana",(50)));
 		//jugadorActualEnPantalla.setTextFill(Color.WHITE);
 		contendorPrincipal.getChildren().add(jugadorActualEnPantalla);
 		contendorPrincipal.setAlignment(jugadorActualEnPantalla, Pos.TOP_CENTER);
@@ -281,38 +282,33 @@ public class TableroJuego extends Menu {
 	}
 	
 	private void restarVidas() {
-        vidas--; // reducir el número de vidas restantes en 1
-        if (vidas >= 0) {
-        	corazones[vidas].setVisible(false);
-          //  corazones.get(vidas).setVisible(false); // ocultar la imagen de corazón correspondiente
-        }
-        if (vidas == 0) {
-        	
-        	window.close();
+		vidas--; // reducir el número de vidas restantes en 1
+		if (vidas >= 0) {
+			corazones[vidas].setVisible(false);
+			//  corazones.get(vidas).setVisible(false); // ocultar la imagen de corazón correspondiente
+		}
+		if (vidas == 0) {
 
-        	
-          	if(jugadorSiguiente!= null && (modoDosJugadores)) {
-          		
-            	window.close();
-            	
-            	ArchivoXML.crearXml(dificultad, jugadorActual.getNombre(), jugadorActual.getPuntuacion());
-            	Controller.continuarJuego(jugadorSiguiente, dificultad);
-            	Controller.crearFinal(jugadorActual,dificultad);
-       		 
+			window.close();
 
 
+			if(jugadorSiguiente!= null && (modoDosJugadores)) {
+				window.close();
 
-        	}
-        	else {
-            	window.close();
-        		ArchivoXML.crearXml(dificultad, jugadorActual.getNombre(), jugadorActual.getPuntuacion());
-        		Controller.crearFinal(jugadorActual,dificultad);
-         		Controller.finalizarJuego(dificultad);
-            	
-         		 
-        	}
-        }
-    }
+				ArchivoXML.crearXml(dificultad, jugadorActual.getNombre(), jugadorActual.getPuntuacion());
+				Controller.continuarJuego(jugadorSiguiente, dificultad);
+				Controller.crearFinal(jugadorActual,dificultad);
+			}
+
+				else  {
+					window.close();
+					ArchivoXML.crearXml(dificultad, jugadorActual.getNombre(), jugadorActual.getPuntuacion());
+					Controller.crearFinal(jugadorActual,dificultad);
+					Controller.finalizarJuego(dificultad);
+				}
+
+			}
+		}
 	
 		//Creando el evento CLICK AL HUECO
 	    //  private void eventoClickHueco() 
@@ -393,7 +389,7 @@ public class TableroJuego extends Menu {
 
 	private void crearContadorTiempoJuego() {
 		temporizador = new Label("Tiempo: 00 ");
-		temporizador.setFont(new Font("Verdana",20));
+		temporizador.setFont(new Font("Verdana",50));
 		//crear objeto grafico que muestra el tiempo transcurrido de juego
 		//AQUI SOLAMENTE se crea el elemento gráfico, NO se inicia automáticamente
 		//Agregar panel a contenedorVentana
@@ -406,7 +402,7 @@ public class TableroJuego extends Menu {
 	
 	private void crearTableroScore() {
 		puntuacion = new Label("Puntuacion: ");
-		puntuacion.setFont(new Font("Verdana",20));
+		puntuacion.setFont(new Font("Verdana",50));
 		//crear objeto grafico que muestra el tablero de score
 		//AQUI SOLAMENTE se crea el elemento gráfico, NO se inicia automáticamente
 		//Agregar panel a contenedorVentana
@@ -417,10 +413,12 @@ public class TableroJuego extends Menu {
 	
 	private void crearBotonInicioPartida() {
 		botonStart = new Button("Iniciar!");
-		botonStart.setFont(new Font("Verdana",30));
+		//botonStart.setFont(new Font("Verdana",30));
 		
+		botonStart.setScaleX(3);
+		botonStart.setScaleY(3);
 		contendorPrincipal.getChildren().add(botonStart);
-		contendorPrincipal.setAlignment(botonStart,Pos.BOTTOM_RIGHT);
+		contendorPrincipal.setAlignment(botonStart,Pos.CENTER);
 		botonStart.setOnMouseClicked(e -> {
 			//Ejecutar todas las funcionas al dar "click" en el BOTON
 				botonStart.setVisible(false);

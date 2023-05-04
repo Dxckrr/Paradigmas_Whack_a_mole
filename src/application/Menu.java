@@ -73,7 +73,7 @@ public class Menu {
 	
 
 	public Menu() {
-		crearseleccionModalidad();
+		crearSeleccionModalidad();
 		//generarBotonesDificultad();
 		//Establecer Icono
 	      Image iconTopo = new Image(getClass().getResourceAsStream("/iconoJuego.png"));
@@ -81,20 +81,20 @@ public class Menu {
 	}
 	
 	
-	private void crearseleccionModalidad() {
+	private void crearSeleccionModalidad() {
 		window = new Stage();
 		window.setFullScreen(true);
 		
-		Text welcome = new Text("Seleccione una modalidad!");
-		welcome.setFont(new Font(50));
+	//	Text welcome = new Text("Seleccione una modalidad!");
+	//	welcome.setFont(new Font(50));
 		
 		unJugador = new Button(" 1 jugador  ");
 		dosJugadores = new Button("2 jugadores");
 		
-		unJugador.setScaleX(2);
-		unJugador.setScaleY(2);
-		dosJugadores.setScaleX(2);
-		dosJugadores.setScaleY(2);
+		unJugador.setScaleX(4);
+		unJugador.setScaleY(4);
+		dosJugadores.setScaleX(4);
+		dosJugadores.setScaleY(4);
 
 		unJugador.setOnAction(e -> {
 			
@@ -106,14 +106,14 @@ public class Menu {
 		    generarPedirNombreDosJugadores();
 		});
 		contenedorModalidades = new VBox();
-		contenedorModalidades.setSpacing(100);	//Espacio entre botones
-		contenedorModalidades.setAlignment(Pos.CENTER_RIGHT);
+		contenedorModalidades.setSpacing(150);	//Espacio entre botones
+		contenedorModalidades.setAlignment(Pos.CENTER);
 	
 		contenedorModalidades.getChildren().addAll(unJugador,dosJugadores);
 		contenedorPrincipalModalidades = new StackPane();
 		
 		//FONDO
-		ImageView fondo = new ImageView("/fondoPobre.png");
+		ImageView fondo = new ImageView("/FondoInicio.png");
 		
 		//Ajustar imagen a resolucion
 		fondo.fitWidthProperty().bind(contenedorPrincipalModalidades.widthProperty());
@@ -123,35 +123,38 @@ public class Menu {
 
 		fondo.toBack();	 // .toBack mande la imagen atras
 		
-		contenedorPrincipalModalidades.getChildren().add(welcome);
-		contenedorPrincipalModalidades.setAlignment(welcome, Pos.TOP_CENTER);
+	//	contenedorPrincipalModalidades.getChildren().add(welcome);
+	//	contenedorPrincipalModalidades.setAlignment(welcome, Pos.TOP_CENTER);
 		
 		
 		
 		contenedorPrincipalModalidades.getChildren().add(contenedorModalidades);
-		contenedorPrincipalModalidades.setMargin(contenedorModalidades, new Insets(0,200,0, 0)); // establecer un margen (ABAJO,IZQUIERDA,ARRIBA,DERECHA)
+		contenedorPrincipalModalidades.setMargin(contenedorModalidades, new Insets(255,230,0, 300)); // establecer un margen (ABAJO,IZQUIERDA,ARRIBA,DERECHA)
 
 		
-		modalidadJugadores = new Scene(contenedorPrincipalModalidades,480,240);
+		modalidadJugadores = new Scene(contenedorPrincipalModalidades,1920,1080);
 		modalidadJugadores.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 		
 		window.setScene(modalidadJugadores);
 		window.setTitle("Wacamole"); 	//Estableciendo titulo
 		window.show();
-
+		
 		
 	}
 	
 	private void generarPedirNombreUnJugador() {
-		
+	
 		contenedorObtenerNombre = new StackPane();
 		
 			escribirNombre = new Label("Jugador , Escribe tu nombre:");
-			escribirNombre.setFont(new Font("Verdana",20));
+			escribirNombre.setFont(new Font("Verdana",45));
+			//escribirNombre.setTextFill(Color.WHEAT);
 			nombre = new TextField();
 			
 			//Ancho y largo
-			nombre.setPrefWidth(200);
+			nombre.setPrefWidth(100);
+			nombre.setPrefHeight(50);
+			//nombre.setPrefWidth(nombre.getPrefWidth() / 2);
 			
 			
 			saveNombreButton = new Button("Guardar");
@@ -164,14 +167,34 @@ public class Menu {
 	        	    generarBotonesDificultad(nombre.getText(),"");
 	        	
 	        });
-	        
-	        contenedorObtenerNombre.setAlignment(escribirNombre, Pos.TOP_CENTER);
+			//FONDO
+			ImageView fondo = new ImageView("/FondoInicio.png");
+			
+			//Ajustar imagen a resolucion
+			fondo.fitWidthProperty().bind(contenedorObtenerNombre.widthProperty());
+			fondo.fitHeightProperty().bind(contenedorObtenerNombre.heightProperty());
+
+			contenedorObtenerNombre.getChildren().add(fondo);
+
+			fondo.toBack();	 // .toBack mande la imagen atras
+	        contenedorObtenerNombre.setAlignment(escribirNombre, Pos.CENTER);
 	        contenedorObtenerNombre.setAlignment(saveNombreButton, Pos.BOTTOM_CENTER);
 	        contenedorObtenerNombre.getChildren().addAll(nombre, escribirNombre, saveNombreButton);
+	        
+	        contenedorObtenerNombre.setMargin(nombre, new Insets(275,200,0,0));// establecer un margen (ABAJO,IZQUIERDA,ARRIBA,DERECHA)
+	        contenedorObtenerNombre.setMargin(escribirNombre, new Insets(150,300,0,0));// establecer un margen (ABAJO,IZQUIERDA,ARRIBA,DERECHA)
+	        contenedorObtenerNombre.setMargin(saveNombreButton, new Insets(250,0,0,0));// establecer un margen (ABAJO,IZQUIERDA,ARRIBA,DERECHA)
+
 	 
-	      introducirNombres = new Scene(contenedorObtenerNombre, 480, 240);
+	      introducirNombres = new Scene(contenedorObtenerNombre, 1920, 1080);
+	      nombre.setMaxWidth(contenedorObtenerNombre.getWidth() /3);	//Se define una vez se tiene claro el width el stackPane
+	      
+	      
+	      
+
 	      introducirNombres.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 	        window.setScene(introducirNombres);
+	        window.setFullScreen(true);
 	        
 
 	}
@@ -186,9 +209,9 @@ public class Menu {
 	    contenedorModalidad2Jugadores.setVgap(20);
 
 	    escribirNombrePlayer1 = new Label("Jugador 1, Escribe tu nombre:");
-	    escribirNombrePlayer1.setFont(new Font("Verdana",20));
+	    escribirNombrePlayer1.setFont(new Font("Verdana",40));
 	    escribirNombrePlayer2 = new Label("Jugador 2, Escribe tu nombre:");
-	    escribirNombrePlayer2.setFont(new Font("Verdana",20));
+	    escribirNombrePlayer2.setFont(new Font("Verdana",40));
 
 	    nombresPlayer1 = new TextField();
 	    nombresPlayer2 = new TextField();
@@ -198,7 +221,7 @@ public class Menu {
 	    nombresPlayer2.setPrefWidth(200);
 
 	    saveNombreButton = new Button("Guardar");
-	    saveNombreButton.setFont(new Font(20));
+	    saveNombreButton.setFont(new Font(30));
 
 	    saveNombreButton.setOnAction(event -> {
 	        guardarNombre(nombresPlayer1.getText(),nombresPlayer2.getText());
@@ -206,18 +229,33 @@ public class Menu {
 	        generarBotonesDificultad(nombresPlayer1.getText(),", "+nombresPlayer2.getText());
 
 	    });
+	    
+		//FONDO
+		ImageView fondo = new ImageView("/FondoInicio.png");
+		
+		//Ajustar imagen a resolucion
+		fondo.fitWidthProperty().bind(contenedorObtenerNombre.widthProperty());
+		fondo.fitHeightProperty().bind(contenedorObtenerNombre.heightProperty());
 
+		contenedorObtenerNombre.getChildren().add(fondo);
+		
 	    contenedorModalidad2Jugadores.add(escribirNombrePlayer1, 0, 0);
 	    contenedorModalidad2Jugadores.add(nombresPlayer1, 1, 0);
 	    contenedorModalidad2Jugadores.add(escribirNombrePlayer2, 0, 1);
 	    contenedorModalidad2Jugadores.add(nombresPlayer2, 1, 1);
 	    contenedorModalidad2Jugadores.add(saveNombreButton, 0, 2, 2, 1);
+	    
+	    contenedorModalidad2Jugadores.setMargin(saveNombreButton, new Insets(0,0,0,200));
+	    contenedorModalidad2Jugadores.setMargin(nombresPlayer1, new Insets(0,0,0,10));// establecer un margen (ABAJO,IZQUIERDA,ARRIBA,DERECHA)
+	    contenedorModalidad2Jugadores.setMargin(nombresPlayer2, new Insets(0,0,0,10));// establecer un margen (ABAJO,IZQUIERDA,ARRIBA,DERECHA)
 
 	    contenedorObtenerNombre.getChildren().add(contenedorModalidad2Jugadores);
-	    introducirNombres = new Scene(contenedorObtenerNombre, 720, 480);
+	    contenedorMenu.setMargin(contenedorModalidad2Jugadores,  new Insets(200,0,0,10));
+	    introducirNombres = new Scene(contenedorObtenerNombre, 1920, 1080);
 	    introducirNombres.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 
 	    window.setScene(introducirNombres);
+	    window.setFullScreen(true);
      
 	}
 
@@ -250,12 +288,12 @@ public class Menu {
 	//	window.setFullScreen(true);
 	//	window.setResizable(true);
 		 welcome = new Label("Bienvenido(s) "+player+player2+"!");
-		welcome.setFont(new Font(50));
+		welcome.setFont(new Font(90));
 		//welcome.setStyle("-fx-font-family: 'MiFuentePersonalizada'; -fx-font-size: 50px; -fx-font-weight: bold; -fx-fill: #333333;");
 
 		
 		selecion = new Label("Seleccione una dificultad!");
-		selecion.setFont(new Font(30));
+		selecion.setFont(new Font(50));
 
 
 		//Botones
@@ -264,12 +302,12 @@ public class Menu {
 		medio = new Button("Medio");
 		dificil = new Button("Dificil");
 		//Posiciones
-		facil.setScaleX(2);
-		facil.setScaleY(2);
-		medio.setScaleX(2);
-		medio.setScaleY(2);
-		dificil.setScaleX(2);
-		dificil.setScaleY(2);
+		facil.setScaleX(3);
+		facil.setScaleY(3);
+		medio.setScaleX(3);
+		medio.setScaleY(3);
+		dificil.setScaleX(3);
+		dificil.setScaleY(3);
 
 		facil.setOnMouseClicked(click);
 		medio.setOnMouseClicked(click);
@@ -282,22 +320,25 @@ public class Menu {
 		contenedorMenu.setAlignment(selecion, Pos.TOP_CENTER);
 		
 
-		contenedorMenu.setAlignment(facil, Pos.CENTER_LEFT);
+		contenedorMenu.setAlignment(facil, Pos.CENTER);
 		contenedorMenu.setAlignment(medio, Pos.CENTER);
-		contenedorMenu.setAlignment(dificil, Pos.CENTER_RIGHT);
+		contenedorMenu.setAlignment(dificil, Pos.CENTER);
 
 		//Insets == Distancia del margen
-		contenedorMenu.setMargin(selecion, new Insets(70));
+		contenedorMenu.setMargin(welcome, new Insets(170,0,0,0)); //establecer un margen (ABAJO,IZQUIERDA,ARRIBA,DERECHA)
+		contenedorMenu.setMargin(selecion, new Insets(260,0,0,0)); 
+
 		
-		contenedorMenu.setMargin(facil, new Insets(100));
-		contenedorMenu.setMargin(medio, new Insets(0));
-		contenedorMenu.setMargin(dificil, new Insets(100));
+		
+		contenedorMenu.setMargin(facil, new Insets(0,400,0,0));
+		contenedorMenu.setMargin(medio, new Insets(0,0,0,0));
+		contenedorMenu.setMargin(dificil, new Insets(0,0,0,400));
 
 		//Fondo---
 
 		// Cargar la imagen de fondo
 		
-		ImageView backgroundImageView = new ImageView("/Fondo.png");
+		ImageView backgroundImageView = new ImageView("/Menu.png");
 		
 		//Ajustar imagen a resolucion
 		backgroundImageView.fitWidthProperty().bind(contenedorMenu.widthProperty());
@@ -308,7 +349,7 @@ public class Menu {
 
 		backgroundImageView.toBack();	 // .toBack mande la imagen atras
 
-		 seleccionDificultades = new Scene(contenedorMenu,1080,720);
+		 seleccionDificultades = new Scene(contenedorMenu,1920,1080);
 		 seleccionDificultades.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 
 		window.setScene(seleccionDificultades);	//Estableciendo el comienzo

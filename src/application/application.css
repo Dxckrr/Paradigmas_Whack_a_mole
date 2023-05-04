@@ -5,13 +5,8 @@
 	-fx-background-color: linear-gradient(gold,yellow);
 }
 
-font-face {
-  font-family: 'kiwi';
-  src: url('/kiwi.ttf');
-  }
-
 .label{
-	-fx-font-family: 'kiwi';
+	-fx-font-family: "Haettenschweiler";
 
 }
 	

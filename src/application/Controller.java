@@ -55,12 +55,18 @@ public class Controller {
 		System.out.println(jugadores);
 	}
 	public static void crearVentanaFinal(ArrayList<Jugador> jugadores,String inDificultad) {
-		
+			
+		if(jugadores.size()==2) {
 			VentanaFin ventanaEnd = new VentanaFin(jugadores,inDificultad);
+
+		}
 
 	}	
 	
 	public static void crearVentanaFinalUnJugador(String inDificultad) {
-		VentanaFin ventanaEnd = new VentanaFin(jugadores.get(0), inDificultad);
+		if(jugadores.size()==1) {
+			VentanaFin ventanaEnd = new VentanaFin(jugadores.get(0), inDificultad);
+
+		}
 	}
 }
